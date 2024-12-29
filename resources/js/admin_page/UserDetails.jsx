@@ -1,133 +1,35 @@
 import React, { useEffect, useState } from "react";
 import SideModal from "@/components/SideModal";
-import SelectInput from "@/components/SelectInput";
-import Swal from "sweetalert2";
-import {
-  useCreateDepartmentMutation,
-  useCreateInstitutionDocumentTypeMutation,
-} from "../../../redux/apiSlice";
-import LoadItems from "@/components/LoadItems";
-import { toast } from "sonner";
+import moment from "moment";
 
-function UserDetails({ setOpenModal, openModal, allPermissions }) {
+function UserDetails({ setOpenModal, openModal, userData }) {
   const initialUserInput = {
-    name: "",
-    description: "",
+    first_name: "",
+    surname: "",
   };
+
   const [userInput, setUserInput] = useState(initialUserInput);
-  const [groupedPermissions, setGroupedPermissions] = useState({});
-  const [selectedPermissions, setSelectedPermissions] = useState([]);
 
   useEffect(() => {
-    if (!openModal) {
-      setUserInput(initialUserInput);
-      setSelectedPermissions([]);
+    if (openModal) {
+      setUserInput(userData || initialUserInput); // Populate with userData or reset
     }
-  }, [openModal]);
-
-  useEffect(() => {
-    if (allPermissions) {
-      const groups = allPermissions?.data?.reduce((acc, permission) => {
-        const parts = permission.name.split(".");
-
-        const category = parts[0];
-        const subcategory = parts.length === 3 ? parts[1] : null;
-        const action = parts.length === 3 ? parts[2] : parts[1];
-
-        if (!acc[category]) acc[category] = {};
-        if (subcategory) {
-          if (!acc[category][subcategory]) acc[category][subcategory] = [];
-          acc[category][subcategory].push({ id: permission.id, action });
-        } else {
-          if (!acc[category].actions) acc[category].actions = [];
-          acc[category].actions.push({ id: permission.id, action });
-        }
-
-        return acc;
-      }, {});
-
-      setGroupedPermissions(groups);
-    }
-  }, [allPermissions]);
+  }, [openModal, userData]);
 
   const handleUserInput = (e) => {
     const { name, value } = e.target;
     setUserInput({ ...userInput, [name]: value });
   };
-  const handleCheckboxChange = (id) => {
-    setSelectedPermissions((prev) =>
-      prev.includes(id) ? prev.filter((permId) => permId !== id) : [...prev, id]
-    );
-  };
 
-  const [createDepartment, { data, isSuccess, isLoading, isError, error }] =
-    useCreateDepartmentMutation();
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    const { name, description } = userInput;
-
-    if (!name || !description) {
-      Swal.fire({
-        title: "Error",
-        text: "Fill All Required Fields",
-        icon: "error",
-        button: "OK",
-      });
-    } else if (selectedPermissions?.length === 0) {
-      Swal.fire({
-        title: "Error",
-        text: "Select at least one permssion",
-        icon: "error",
-        button: "OK",
-      });
-    } else {
-      try {
-        await createDepartment({
-          name,
-          description,
-          permissions: selectedPermissions,
-        });
-      } catch (error) {
-        toast.error("Failed create department", {
-          position: "top-right",
-          autoClose: 1202,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-        });
-      }
-    }
+    console.log("Submitted User Input: ", userInput);
+    setOpenModal(false); // Close modal on submit
   };
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      Swal.fire({
-        title: "Success",
-        text: "Department created successfully",
-        icon: "success",
-        button: "OK",
-        confirmButtonColor: "#00b17d",
-      }).then((isOkay) => {
-        if (isOkay) {
-          setOpenModal(!openModal);
-        }
-      });
-    }
-  }, [isSuccess, data]);
-
-  useEffect(() => {
-    if (isError) {
-      toast.error(error?.data?.message);
-    }
-  }, [isError]);
 
   return (
     <SideModal
-      title={"Department Details"}
+      title="User Details"
       setOpenModal={setOpenModal}
       openModal={openModal}
     >
@@ -136,95 +38,170 @@ function UserDetails({ setOpenModal, openModal, allPermissions }) {
         className="md:px-[1vw] px-[5vw] w-full overflow-auto pt-[1vw]"
       >
         <div className="flex flex-col">
-          <div className="md:mt-[2vw] mt-[10vw]">
-            <h4 className="md:text-[1vw] text-[4vw] mb-1">
-              Department Name<span className="text-[#f1416c]">*</span>
-            </h4>
-            <div className="relative w-full md:h-[2.7vw] h-[12vw] md:rounded-[0.3vw!important] rounded-[1.5vw!important] overflow-hidden border-[1.5px] border-[#E5E5E5]">
-              <input
-                type="text"
-                name="name"
-                value={userInput.name}
-                onChange={handleUserInput}
-                className="w-full h-full md:px-[0.8vw] px-[2vw] md:text-[1vw] text-[3.5vw] focus:outline-none bg-[#f7f7f7] absolute left-0 right-0 bottom-0 top-0"
-              />
+          <div className="grid grid-cols-3 gap-y-4 gap-x-2 border-b pb-4">
+            <div className="text-gray-500">
+              Full Name
+            </div>
+            <div className="col-span-2">
+              {userInput?.first_name} {userInput?.surname}
+            </div>
+            <div className="text-gray-500">
+              Gender
+            </div>
+            <div className="col-span-2">
+              {userInput.gender}
+            </div>
+            <div className="text-gray-500">
+              Date of Birth
+            </div>
+            <div className="col-span-2">
+              {moment(userInput?.date_of_birth).format("Do MMMM, YYYY")}
+            </div>
+            <div className="text-gray-500">
+              Nationality
+            </div>
+            <div className="col-span-2">
+              {userInput?.nationality || "N/A"}
+            </div>
+            <div className="text-gray-500">
+              Address
+            </div>
+            <div className="col-span-2">
+              {userInput?.address || "N/A"}
+            </div>
+            <div className="text-gray-500">
+              Telephone
+            </div>
+            <div className="col-span-2">
+              {userInput?.telephone || "N/A"}
+            </div>
+            <div className="text-gray-500">
+              Email
+            </div>
+            <div className="col-span-2">
+            {userInput?.email}
             </div>
           </div>
-          <div className="md:mt-[2vw] mt-[10vw]">
-            <h4 className="md:text-[1vw] text-[4vw] mb-1">
-              Description
-              <span className="text-[#f1416c]">*</span>
-            </h4>
-            <div className="relative w-full md:h-[10vw] h-[30vw] md:rounded-[0.3vw!important] rounded-[1.5vw!important] overflow-hidden border-[1.5px] border-[#E5E5E5]">
-              <textarea
-                placeholder="Enter institution desription"
-                value={userInput?.description}
-                name="description"
-                required
-                onChange={handleUserInput}
-                className="w-full h-full md:p-[0.8vw] p-[2vw] md:text-[1vw] text-[3.5vw] focus:outline-none bg-[#f7f7f7] absolute left-0 right-0 bottom-0 top-0"
-              ></textarea>
+            <div className="py-4">
+              <p className="font-semibold mb-4 text-base">Other Info</p>
+              <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
+                <div className="text-gray-500">
+                  Profession
+                </div>
+                <div className="col-span-2">
+                  {userInput?.profession}
+                </div>
+                <div className="text-gray-500">
+                  Date of Payment
+                </div>
+                <div className="col-span-2">
+                  {userInput?.date_of_payment}
+                </div>
+                <div className="text-gray-500">
+                Codice Fiscale
+                </div>
+                <div className="col-span-2">
+                  {userInput?.codice_fiscale}
+                </div>
+                <div className="text-gray-500">
+                Bank Details
+                </div>
+                <div className="col-span-2">
+                  {userInput?.bank_details}
+                </div>
+                <div className="text-gray-500">
+                ID Type
+                </div>
+                <div className="col-span-2">
+                  {userInput?.id_type}
+                </div>
+              </div>
+            </div>
+            <div className="py-4">
+              <p className="font-semibold mb-4 text-base">Guarantor Info</p>
+              <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
+                <div className="text-gray-500">
+                  Full Name
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_first_name} {userInput?.guarantor_surname}
+                </div>
+                <div className="text-gray-500">
+                  Telephone
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_telephone}
+                </div>
+                <div className="text-gray-500">
+                Street Name
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_street_name}
+                </div>
+                <div className="text-gray-500">
+                House Number
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_house_number}
+                </div>
+                <div className="text-gray-500">
+                City
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_city}
+                </div>
+                <div className="text-gray-500">
+                Province
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_province}
+                </div>
+                <div className="text-gray-500">
+                Postal Code
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_postal_code}
+                </div>
+                <div className="text-gray-500">
+                ID Type
+                </div>
+                <div className="col-span-2">
+                  {userInput?.guarantor_id_type}
+                </div>
+              </div>
+            </div>
+            <div className="py-4">
+              <p className="font-semibold mb-4 text-base">Uploads</p>
+              <div className="grid grid-cols-2 gap-y-4 border-b pb-4">
+                
+                <div className="text-gray-500">
+                ID Card Front
+                </div>
+                <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
+                  <img src={userInput?.idcard_front_url} alt="" />
+                </div>
+                <div className="text-gray-500">
+                ID Card Back
+                </div>
+                <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
+                  <img src={userInput?.idcard_back_url} alt="" />
+                </div>
+                <div className="text-gray-500">
+                Guarantor ID Card Front
+                </div>
+                <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
+                  <img src={userInput?.guarantor_idcard_front_url} alt="" />
+                </div>
+                <div className="text-gray-500">
+                Guarantor ID Card Back
+                </div>
+                <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
+                  <img src={userInput?.guarantor_idcard_back_url} alt="" />
+                </div>
+              </div>
             </div>
           </div>
-          <div className="mt-4">
-            <h4 className="md:text-[1vw] text-[4vw] mb-1">
-              Permissions<span className="text-[#f1416c]">*</span>
-            </h4>
-            <div className="flex gap-[3vw] flex-wrap">
-              {Object?.entries(groupedPermissions)?.map(
-                ([category, subcategories]) => (
-                  <div key={category} className="mb-[0.2vw]">
-                    <h2 className="text-[0.9vw] capitalize font-[600]">{`Manage ${category.replace(
-                      "-",
-                      " "
-                    )}`}</h2>
-                    {Object?.entries(subcategories)?.map(
-                      ([subcategory, actions]) => (
-                        <div key={subcategory} className="ml-[0.5vw]">
-                          <h3 className="text-[0.9vw] capitalize">
-                            {subcategory.replace("-", " ")}
-                          </h3>
-                          {actions.map(({ id, action }) => (
-                            <div key={id} className="ml-[0.5vw]">
-                              <label className="flex items-center gap-[0.3vw] text-[0.9vw] cursor-pointer">
-                                <input
-                                  type="checkbox"
-                                  className="checkbox-design1"
-                                  checked={selectedPermissions.includes(id)}
-                                  onChange={() => handleCheckboxChange(id)}
-                                />
-                                {`Can ${action.replace("-", " ")}`}
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    )}
-                  </div>
-                )
-              )}
-            </div>
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="bg-[#FF0404] md:my-[2vw!important] my-[4vw!important] w-full flex justify-center items-center md:py-[0.7vw] py-[2vw] h-[fit-content] md:rounded-[0.3vw] rounded-[2vw] gap-[0.5vw] hover:bg-[#ef4545] transition-all duration-300 disabled:bg-[#fa6767]"
-        >
-          {isLoading ? (
-            <div className="flex items-center justify-center gap-2">
-              <LoadItems color={"#ffffff"} size={15} />
-              <h4 className="md:text-[1vw] text-[3.5vw] text-[#ffffff]">
-                Submitting...
-              </h4>
-            </div>
-          ) : (
-            <h4 className="md:text-[1vw] text-[3.5vw] text-[#ffffff]">
-              Submit
-            </h4>
-          )}
-        </button>
+        
       </form>
     </SideModal>
   );

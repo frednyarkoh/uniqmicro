@@ -3,6 +3,7 @@ import axios from "axios";
 import Modal from "../components/Modal"
 import toast from "react-hot-toast";
 import InputField from "../components/InputField";
+import UserDetails from "./UserDetails";
 
 const UserData = () => {
     const [pageNumber, setPageNumber] = useState(1);
@@ -10,6 +11,9 @@ const UserData = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedData, setSelectedData] = useState(false);
     const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+    const [openModal, setOpenModal] = useState(false);
+    const [selectedUser, setSelectedUser] = useState(null);
+
     const BASE_URL = "http://127.0.0.1:8000/storage/";
     const [submittedFilters, setSubmittedFilters] = useState({});
     const [filters, setFilters] = useState({
@@ -31,6 +35,8 @@ const UserData = () => {
                 ...user,
                 idcard_front_url: user.idcard_front ? `${BASE_URL}${user.idcard_front}` : null,
                 idcard_back_url: user.idcard_back ? `${BASE_URL}${user.idcard_back}` : null,
+                guarantor_idcard_back_url: user.guarantor_idcard_back ? `${BASE_URL}${user.guarantor_idcard_back}` : null,
+                guarantor_idcard_front_url: user.guarantor_idcard_front ? `${BASE_URL}${user.guarantor_idcard_front}` : null,
             }));
 
             setUserData(processedUsers);
@@ -45,37 +51,32 @@ const UserData = () => {
         fetchUserData();
     }, [submittedFilters, pageNumber]);
 
-    const handleExportLogs = () => {
-        setIsExportReload(true);
-    
-        toast.success("Your data will be exported soon", {
-          position: "top-right",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-    
-        const apiUrl = `http://127.0.0.1/api/system-logs/export`;
-        const params = new URLSearchParams({
-            page: 1,
-            selectedFrom: selectedFrom != "" ? selectedFrom : currentDate,
-            selectedTo: selectedTo != "" ? selectedTo : currentDate,
-            user_id: user?.user?.id,
-        });
-    
-        if (searchValue !== undefined && searchValue !== "")
-            params.append("search_query", searchValue);
-    
-        const finalUrl = `${apiUrl}?${params.toString()}`;
-    
-        setTimeout(() => {
-            window.location.replace(finalUrl);
-            setIsExportReload(false);
-        }, 3000);
+    const handleOpenModal = (userData) => {
+        setSelectedUser(userData); // Set the user data to pass to the modal
+        setOpenModal(true); // Open the modal
+      };
+
+    const handleExport = async () => {
+        try {
+            const response = await axios.get("/api/export", {
+            params: { query: filters.search_query || "" },
+            responseType: "blob", // Handle binary data
+            });
+
+            // Create a Blob and trigger download
+            const blob = new Blob([response.data], {
+            type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.setAttribute("download", "data.xlsx");
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode.removeChild(link);
+        } catch (error) {
+            console.error("Error exporting data:", error);
+        }
     };
 
     const handleDeleteClick = (user) => {
@@ -103,7 +104,7 @@ const UserData = () => {
                     <InputField
                         radius="none"
                         name="search_query"
-                        placeholder="Search by faculty name or short name"
+                        placeholder="Search by users or guarantor details"
                         value={filters.search_query}
                         onChange={(e) => setFilters({ ...filters, search_query: e.target.value })}
                        
@@ -134,7 +135,8 @@ const UserData = () => {
                         </button>
                     </div>
                     <button
-                        type="submit"
+                        type="button"
+                        onClick={handleExport}
                         className="rounded-sm px-4 py-1.5 text-sm bg-blue-600 text-white"
                         >
                         Export Data
@@ -230,14 +232,25 @@ const UserData = () => {
                                         </td>
 
                                         <td className="px-[1vw] border-b">
-                                            <button size="sm"
-                                                className='text-red-600 flex items-center justify-center'
-                                                onClick={() => handleDeleteClick(user)}
-                                            >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash3-fill" viewBox="0 0 16 16">
-                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                                            </svg>
-                                            </button>
+                                            <div className="flex space-x-3">
+                                                <button size="sm"
+                                                    className='text-red-600 flex items-center justify-center'
+                                                    onClick={() => handleDeleteClick(user)}
+                                                >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-trash3-fill w-5 h-5" viewBox="0 0 16 16">
+                                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                                </svg>
+                                                </button>
+                                                <button size="sm"
+                                                    className='text-blue-600 flex items-center justify-center'
+                                                    onClick={() => handleOpenModal(user)}
+                                                >
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-info-circle-fill w-5 h-5" viewBox="0 0 16 16">
+                                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                                </svg>  
+                                                </button>
+                                            </div>
+                                            
                                         </td>
                                         </tr>
                                     );
@@ -300,6 +313,14 @@ const UserData = () => {
                     </div>
                 </div>
             </div>
+            {openModal && (
+                <UserDetails
+                    setOpenModal={setOpenModal}
+                    openModal={openModal}
+                    userData={selectedUser}
+                />
+            )}
+            
             {isDeleteDrawerOpen && (
                 <DeleteUserModal
                     fetchUsers={fetchUserData}

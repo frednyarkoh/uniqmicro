@@ -8,6 +8,6 @@
     @vite('resources/js/main.jsx')
 </head>
 <body>
-    <div id="main"></div> <!-- Ensure this matches `rootElement` in `main.jsx` -->
+    <div id="main"></div>
 </body>
 </html>

@@ -4,8 +4,14 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserForm;
+use App\Exports\DataExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Style\Font;
 
 class UserFormController extends Controller
 {
@@ -25,7 +31,7 @@ class UserFormController extends Controller
                     ->orWhere('nationality', 'LIKE', "%{$searchTerm}%")
                     ->orWhere('profession', 'LIKE', "%{$searchTerm}%")
                     ->orWhere('guarantor_first_name', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('guarantor_last_name', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('guarantor_surname', 'LIKE', "%{$searchTerm}%")
                     ->orWhere('telephone', 'LIKE', "%{$searchTerm}%");
             });
         }
@@ -45,6 +51,103 @@ class UserFormController extends Controller
     public function create()
     {
         //
+    }
+
+    public function export(Request $request)
+    {
+        $query = $request->query('query'); // Get search query
+
+        // Example: Fetch filtered data from your database
+        $data = UserForm::when($query, function ($q) use ($query) {
+            $q->where('first_name', 'LIKE', "%{$query}%")
+                ->orWhere('surname', 'LIKE', "%{$query}%")
+                ->orWhere('nationality', 'LIKE', "%{$query}%")
+                ->orWhere('profession', 'LIKE', "%{$query}%")
+                ->orWhere('guarantor_first_name', 'LIKE', "%{$query}%")
+                ->orWhere('guarantor_surname', 'LIKE', "%{$query}%")
+                ->orWhere('telephone', 'LIKE', "%{$query}%");
+        })->get();
+
+        // Create a new Spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set Header Row
+        $headers = [
+            'First Name', 'Surname', 'Gender', 'Date of Birth', 'Nationality', 'Address', 'Telephone', 'Email',
+            'Profession', 'Date of Payment', 'Codice Fiscale', 'Bank Details', 'ID Type',
+            'ID Card Front', 'ID Card Back', 'Guarantor First Name', 'Guarantor Surname',
+            'Guarantor Telephone', 'Guarantor Street Name', 'Guarantor House Number',
+            'Guarantor City', 'Guarantor Province', 'Guarantor Postal Code', 'Guarantor ID Type',
+            'Guarantor ID Card Front', 'Guarantor ID Card Back'
+        ];
+
+        // Set headers in the first row
+    $column = 'A';
+    foreach ($headers as $header) {
+        $sheet->setCellValue($column . '1', $header);
+        $column++;
+    }
+
+    // Apply bold styling to headers
+    $sheet->getStyle('A1:' . $column . '1')->applyFromArray([
+        'font' => [
+            'bold' => true,
+            'size' => 12,
+        ],
+        'alignment' => [
+            'horizontal' => Alignment::HORIZONTAL_CENTER,
+        ],
+        'fill' => [
+            'fillType' => Fill::FILL_SOLID,
+            'startColor' => ['rgb' => 'D9E1F2'], // Light blue background for headers
+        ],
+    ]);
+
+    // Populate data rows
+    $row = 2;
+    foreach ($data as $record) {
+        $sheet->setCellValue('A' . $row, $record->first_name);
+        $sheet->setCellValue('B' . $row, $record->surname);
+        $sheet->setCellValue('C' . $row, $record->gender);
+        $sheet->setCellValue('D' . $row, $record->date_of_birth);
+        $sheet->setCellValue('E' . $row, $record->nationality);
+        $sheet->setCellValue('F' . $row, $record->address);
+        $sheet->setCellValue('G' . $row, $record->telephone);
+        $sheet->setCellValue('H' . $row, $record->email);
+        $sheet->setCellValue('I' . $row, $record->profession);
+        $sheet->setCellValue('J' . $row, $record->date_of_payment);
+        $sheet->setCellValue('K' . $row, $record->codice_fiscale);
+        $sheet->setCellValue('L' . $row, $record->bank_details);
+        $sheet->setCellValue('M' . $row, $record->id_type);
+        $sheet->setCellValue('N' . $row, $record->idcard_front);
+        $sheet->setCellValue('O' . $row, $record->idcard_back);
+        $sheet->setCellValue('P' . $row, $record->guarantor_first_name);
+        $sheet->setCellValue('Q' . $row, $record->guarantor_surname);
+        $sheet->setCellValue('R' . $row, $record->guarantor_telephone);
+        $sheet->setCellValue('S' . $row, $record->guarantor_street_name);
+        $sheet->setCellValue('T' . $row, $record->guarantor_house_number);
+        $sheet->setCellValue('U' . $row, $record->guarantor_city);
+        $sheet->setCellValue('V' . $row, $record->guarantor_province);
+        $sheet->setCellValue('W' . $row, $record->guarantor_postal_code);
+        $sheet->setCellValue('X' . $row, $record->guarantor_id_type);
+        $sheet->setCellValue('Y' . $row, $record->guarantor_idcard_front);
+        $sheet->setCellValue('Z' . $row, $record->guarantor_idcard_back);
+        $row++;
+    }
+
+    // Auto-size columns
+    foreach (range('A', 'Z') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+
+        // Create an Excel file and download it
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'data.xlsx';
+        $tempFile = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($tempFile);
+
+        return response()->download($tempFile, $fileName)->deleteFileAfterSend(true);
     }
 
     /**

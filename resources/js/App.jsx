@@ -1,5 +1,4 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
 import UserForm from "./client_page/UserForm";
 import CongratsPage from "./client_page/CongratsPage";
 import UserData from "./admin_page/UserData";

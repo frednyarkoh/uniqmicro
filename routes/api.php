@@ -7,4 +7,5 @@ Route::middleware('api')->group(function () {
     Route::post('/upload/user-forms', [UserFormController::class, 'store']);
     Route::get('/fetch/user-data', [UserFormController::class, 'index']);
     Route::delete('/user-data/{id}', [UserFormController::class, 'destroy']);
+    Route::get('/export', [UserFormController::class, 'export']);
 });
