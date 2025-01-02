@@ -13,7 +13,7 @@ const Select = ({
     <div className={className}>
       <label
         htmlFor={name}
-        className="block mb-1 text-sm font-medium text-gray-900 dark:text-white"
+        className="block mb-1 text-sm font-medium text-gray-900"
       >
         {label}
       </label>
