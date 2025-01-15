@@ -82,7 +82,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
             {userInput?.email}
             </div>
           </div>
-            <div className="py-4">
+            <div className="pt-4">
               <p className="font-semibold mb-4 text-base">Other Info</p>
               <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
                 <div className="text-gray-500">
@@ -104,7 +104,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                   {userInput?.codice_fiscale}
                 </div>
                 <div className="text-gray-500">
-                Bank Details
+                IBAN NUMBER
                 </div>
                 <div className="col-span-2">
                   {userInput?.bank_details}
@@ -117,7 +117,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                 </div>
               </div>
             </div>
-            <div className="py-4">
+            <div className="pb-4">
               <p className="font-semibold mb-4 text-base">Guarantor Info</p>
               <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
                 <div className="text-gray-500">
@@ -170,7 +170,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                 </div>
               </div>
             </div>
-            <div className="py-4">
+            <div className="pb-4">
               <p className="font-semibold mb-4 text-base">Uploads</p>
               <div className="grid grid-cols-2 gap-y-4 border-b pb-4">
                 

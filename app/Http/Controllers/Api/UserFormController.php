@@ -79,7 +79,7 @@ class UserFormController extends Controller
             'ID Card Front', 'ID Card Back', 'Guarantor First Name', 'Guarantor Surname',
             'Guarantor Telephone', 'Guarantor Street Name', 'Guarantor House Number',
             'Guarantor City', 'Guarantor Province', 'Guarantor Postal Code', 'Guarantor ID Type',
-            'Guarantor ID Card Front', 'Guarantor ID Card Back'
+            'Guarantor ID Card Front', 'Guarantor ID Card Back', 'Amount', 'Rate', 'Total Amount'
         ];
 
         // Set headers in the first row
@@ -133,11 +133,14 @@ class UserFormController extends Controller
         $sheet->setCellValue('X' . $row, $record->guarantor_id_type);
         $sheet->setCellValue('Y' . $row, $record->guarantor_idcard_front);
         $sheet->setCellValue('Z' . $row, $record->guarantor_idcard_back);
+        $sheet->setCellValue('AA' . $row, $record->amount);
+        $sheet->setCellValue('AB' . $row, $record->rate);
+        $sheet->setCellValue('AC' . $row, $record->total_amount);
         $row++;
     }
 
     // Auto-size columns
-    foreach (range('A', 'Z') as $col) {
+    foreach (range('A', 'AC') as $col) {
         $sheet->getColumnDimension($col)->setAutoSize(true);
     }
 
@@ -165,12 +168,14 @@ class UserFormController extends Controller
             'address' => 'required|string',
             'telephone' => 'required|string',
             'email' => 'required|email|max:255',
+            'applicant_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // Professional Data
             'profession' => 'required|string|max:255',
             'date_of_payment' => 'required|date',
             'codice_fiscale' => 'required|string|max:255',
             'bank_details' => 'required|string|max:255',
             'id_type' => 'required|string|max:255',
+            'loan_purpose' => 'required|string|max:255',
             'idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // Guarantor Data
@@ -183,8 +188,13 @@ class UserFormController extends Controller
             'guarantor_province' => 'required|string|max:255',
             'guarantor_postal_code' => 'required|string|max:255',
             'guarantor_id_type' => 'required|string|max:255',
+            'guarantor_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'guarantor_idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'guarantor_idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            // Office Use
+            'amount' => 'required|string',
+            'rate' => 'required|string',
+            'total_amount' => 'required|string',
         ]);
 
         // Handle file uploads

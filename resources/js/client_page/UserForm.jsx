@@ -6,20 +6,22 @@ import GuarantorData from "./GuarantorData";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import axios from "axios";
+import OfficeUse from "./OfficeUse";
 
 const UserForm = () => {
-  const steps = ["Biodata", "Professional Data", "Guarantor Data"];
+  const steps = ["Biodata", "Professional Data", "Guarantor Data", "Office Use"];
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     biodata: { first_name: "", surname: "", gender: "", date_of_birth: "", nationality: "", address: "", telephone: "", email: "" },
-    professionalData: { profession: "", date_of_payment: "",  codice_fiscale: "", id_type: "",  idcard_front: "", idcard_back: "", bank_details: "" },
+    professionalData: { profession: "", date_of_payment: "",  codice_fiscale: "", id_type: "",  idcard_front: "", idcard_back: "", bank_details: "", loan_purpose: "" },
     guarantorData: { guarantor_first_name: "", 
                     guarantor_surname: "", guarantor_telephone: "", 
                     guarantor_street_name: "", guarantor_house_number: "", 
                     guarantor_city: "", guarantor_province: "",
                     guarantor_postal_code: "", guarantor_id_type: "", 
-                    guarantor_idcard_front: "", guarantor_idcard_back: "" },
+                    guarantor_idcard_front: "", guarantor_idcard_back: "", guarantor_nationality: "" },
+    officeData: {amount: "", rate: "", total_amount: ""}
   });
   const navigate = useNavigate();
 
@@ -64,6 +66,11 @@ const UserForm = () => {
             formDataToSend.append(key, value);
         });
 
+        // Append office use fields
+        Object.entries(formData.officeData).forEach(([key, value]) => {
+            formDataToSend.append(key, value);
+        });
+
         try {
             
             const response = await axios.post("/api/upload/user-forms", formDataToSend, {
@@ -84,6 +91,7 @@ const UserForm = () => {
                 address: "",
                 telephone: "",
                 email: "",
+                applicant_signature: "",
             },
             professionalData: {
                 profession: "",
@@ -93,6 +101,7 @@ const UserForm = () => {
                 idcard_front: "",
                 idcard_back: "",
                 bank_details: "",
+                loan_purpose: "",
             },
             guarantorData: {
                 guarantor_first_name: "",
@@ -106,87 +115,110 @@ const UserForm = () => {
                 guarantor_id_type: "",
                 guarantor_idcard_front: "",
                 guarantor_idcard_back: "",
+                guarantor_nationality: "",
+                guarantor_signature: "",
             },
+            officeData: {amount: "", rate: "", total_amount: ""}
         });
 
         // Navigate to congrats page
         navigate("/congrats");
         } catch (error) {
             toast.error(error?.response?.data?.message);
+            setIsLoading(false)
         }
     };
 
 
   return (
-    <div className="w-full flex justify-center bg-gray-100 min-h-screen lg:py-6">
-        <div className="w-full lg:w-2/3 bg-white shadow-md shadow-gray-400 p-6 lg:p-10">
-            <div className="flex flex-col lg:flex-row items-center lg:space-x-8 lg:p-8 border-b mb-4">
-                <img src="/images/uniqLogo.png" alt="" className="w-32 h-32"/>
-                <div className="text-gray-700 text-center lg:text-left">
-                    <p className="text-xl lg:text-2xl font-bold">Customer Credit Application Forms</p>
-                    <p>Brescia, Italy</p>
+    <div className="w-full relative flex flex-col justify-center bg-white min-h-screen">
+        <div className="fixed w-full top-0 flex bg-white py-1.5 px-4 shadow-md z-50 shadow-gray-400">
+            <div className="flex items-center space-x-2">
+                <img src="/images/uniqLogo.png" alt="" className="w-12"/>
+                <div className="font-bold text-[#08446A]">
+                    <p className="-mb-1 text-xl">UNIQ MICRO</p>
+                    <p className="text-sm font-semibold">CREDIT SRL, <span>Brescia - Italy</span></p>
                 </div>
             </div>
-            <Stepper steps={steps} currentStep={currentStep} />
+        </div>
+        <img src="/images/125.jpg" alt="" className="w-full fixed top-12"/>
+        
+        <div className="w-full flex justify-center z-20 mt-24 px-2">
+            <div className="w-full lg:w-4/5 xl:w-2/3 bg-white border mb-5">
+                <div className="w-full flex flex-col items-center border-b mb-4">
+                    
+                    <div className="w-full text-white bg-[#08446A] text-center py-1">
+                        <p className="text-xl lg:text-2xl font-bold">Loan Application Forms</p>
+                        <p className="text-sm">Submission form for Customers</p>
+                    </div>
+                </div>
+                <Stepper steps={steps} currentStep={currentStep} className="w-full"/>
 
-            <div className="mb-6">
-                {currentStep === 0 && 
-                <BioData
-                    saveData={(data) => saveData("biodata", data)}
-                    initialData={formData.biodata}
-                />}
-                {currentStep === 1 &&
-                <ProfessionalData
-                    saveData={(data) => saveData("professionalData", data)}
-                    initialData={formData.professionalData}
-                />}
-                {currentStep === 2 &&
-                    <GuarantorData
-                    saveData={(data) => saveData("guarantorData", data)}
-                    initialData={formData.guarantorData}
-                />}
-            </div>
+                <div className="mb-6 px-8">
+                    {currentStep === 0 && 
+                    <BioData
+                        saveData={(data) => saveData("biodata", data)}
+                        initialData={formData.biodata}
+                    />}
+                    {currentStep === 1 &&
+                    <ProfessionalData
+                        saveData={(data) => saveData("professionalData", data)}
+                        initialData={formData.professionalData}
+                    />}
+                    {currentStep === 2 &&
+                        <GuarantorData
+                        saveData={(data) => saveData("guarantorData", data)}
+                        initialData={formData.guarantorData}
+                    />}
+                    {currentStep === 3 &&
+                        <OfficeUse
+                        saveData={(data) => saveData("officeData", data)}
+                        initialData={formData.officeData}
+                    />}
+                </div>
 
-            <div className="flex justify-between">
-                <button
-                onClick={handlePrevious}
-                disabled={currentStep === 0}
-                className={`py-2 px-4 text-sm font-semibold text-white rounded-full ${
-                    currentStep === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-blue-500"
-                }`}
-                >
-                Previous
-                </button>
-
-                {currentStep < steps.length - 1 ? (
-                <button
-                    onClick={handleNext}
-                    className="py-2 px-6 text-sm font-semibold bg-blue-500 text-white rounded-full"
-                >
-                    Next
-                </button>
-                ) : (
-                <button
-                    type="button"
-                    onClick={handleSubmit}
-                    className={`py-2 px-6 text-sm font-semibold rounded-full flex items-center justify-center text-white ${
-                        isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500"
+                <div className="flex justify-between px-8 pb-8">
+                    <button
+                    onClick={handlePrevious}
+                    disabled={currentStep === 0}
+                    className={`py-2 px-4 text-sm font-semibold text-white rounded-full ${
+                        currentStep === 0 ? "bg-gray-400 cursor-not-allowed" : "bg-[#08446A]"
                     }`}
-                    disabled={isLoading}
-                >
-                    {isLoading ? (
-                        <div className="flex items-center gap-2">
-                            <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 rounded-full"></div>
-                            <span>Submitting...</span>
-                        </div>
+                    >
+                    Previous
+                    </button>
+
+                    {currentStep < steps.length - 1 ? (
+                    <button
+                        onClick={handleNext}
+                        className="py-2 px-6 text-sm font-semibold bg-[#08446A] text-white rounded-full"
+                    >
+                        Next
+                    </button>
                     ) : (
-                        "Submit"
+                    <button
+                        type="button"
+                        onClick={handleSubmit}
+                        className={`py-2 px-6 text-sm font-semibold rounded-full flex items-center justify-center text-white ${
+                            isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-green-500"
+                        }`}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <div className="flex items-center gap-2">
+                                <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 rounded-full"></div>
+                                <span>Submitting...</span>
+                            </div>
+                        ) : (
+                            "Submit"
+                        )}
+                    </button>
+                    
                     )}
-                </button>
-                
-                )}
+                </div>
             </div>
         </div>
+        
         
     </div>
   );

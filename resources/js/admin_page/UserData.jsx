@@ -92,13 +92,19 @@ const UserData = () => {
     };
 
     return (
-        <div className="flex items-center justify-center w-full">
-            <div className="w-full xl:w-[90%] md:mt-[1vw] mt-[6vw]">
-                <div className="flex space-x-4 font-bold text-2xl mb-1 uppercase">
-                    <img src="/images/uniqLogo.png" alt="" className="w-16 h-16"/>
-                    <p className="self-end text-gray-800">Customer Credit Application Data</p>
+        <div className="w-full relative flex flex-col justify-center bg-white min-h-screen">
+            <div className="fixed w-full top-0 flex bg-white py-1.5 px-4 shadow-md z-50 shadow-gray-400">
+                <div className="flex items-center space-x-2">
+                    <img src="/images/uniqLogo.png" alt="" className="w-12"/>
+                    <div className="font-bold text-[#08446A]">
+                        <p className="-mb-1 text-xl">UNIQ MICRO</p>
+                        <p className="text-sm font-semibold">CREDIT SRL, <span>Brescia - Italy</span></p>
+                    </div>
                 </div>
-                <div className="w-full md:min-h-[40vw] min-h-[100vw] gap-[3vw] overflow-auto bg-[#f8f8f8] p-[1vw] table-cover scroll-width">
+            </div>
+            <img src="/images/125.jpg" alt="" className="w-full fixed top-12"/>
+        
+            <div className="w-full md:min-h-[40vw] min-h-[100vw] gap-[3vw] overflow-auto bg-[#f8f8f8] p-[1vw] table-cover scroll-width">
                 <div className="w-full">
                     <form onSubmit={handleSubmit} className="flex flex-row gap-3 items-center mb-1">
                     <InputField
@@ -107,7 +113,7 @@ const UserData = () => {
                         placeholder="Search by users or guarantor details"
                         value={filters.search_query}
                         onChange={(e) => setFilters({ ...filters, search_query: e.target.value })}
-                       
+                    
                         className="w-1/2"
                     />
                     <div className="flex space-x-2">
@@ -143,183 +149,180 @@ const UserData = () => {
                     </button>
                     </form>
                 </div>
-                    <table className="w-full border-collapse md:text-[0.9vw] text-[3.5vw] relative">
-                        <thead className="bg-white sticky top-0 z-[20]">
-                            <tr className="text-left">
-                            <th className="md:py-[1vw] py-[3vw] md:px-[1vw] px-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">
-                                User
-                                </h4>
-                            </th>
-                            <th className="md:py-[1vw] py-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">Telephone</h4>
-                            </th>
-                            <th className="md:py-[1vw] py-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">Date of Birth</h4>
-                            </th>
-                            <th className="md:py-[1vw] py-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">Nationality</h4>
-                            </th>
-                            <th className="md:py-[1vw] py-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">ID Card</h4>
-                            </th>
-                            <th className="md:py-[1vw] py-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">Profession</h4>
-                            </th>
-                            <th className="md:py-[1vw] py-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">Guarantor</h4>
-                            </th>
-                            <th className="md:py-[1vw] py-[3vw] border-b">
-                                <h4 className="md:text-[1vw] text-[3.5vw]">Action</h4>
-                            </th>
-                            </tr>
-                        </thead>
-                        <tbody className="">
-                            {!isLoading ? (
-                            <>
-                                {userData?.length === 0 ? (
-                                <tr>
-                                    <td colSpan={7} rowSpan={5}>
-                                    <div className="w-full h-[35vw] flex flex-col justify-center items-center">
-                                        <img
-                                        src="/assets/img/no-data.svg"
-                                        alt=""
-                                        className="w-[10vw]"
-                                        />
-                                        <h4 className="md:text-[1vw] text-[3.5vw] font-[600]">
-                                        No Log Available
-                                        </h4>
-                                    </div>
-                                    </td>
-                                </tr>
-                                ) : (
-                                <>
-                                    {userData?.map((user, i) => {
-                                    return (
-                                        <tr key={i}>
-                                        <td className="py-[1vw] pl-2 border-b">
-                                        <h4 className="flex items-center space-x-2">
-                                            <img
-                                                src={user.idcard_front_url}
-                                                alt="ID Card Front"
-                                                className="w-8 h-8 object-cover rounded-full border"
-                                            />
-                                            <div>
-                                                <p className="font-semibold text-sm">{user?.first_name} {user?.surname}</p>
-                                                <p>{user?.email}</p>
-                                            </div>
-                                            
-                                        </h4>
-                                        </td>
-                                        <td className="py-[1vw] border-b">
-                                            {user?.telephone}
-                                        </td>
-                                        <td className="py-[1vw] border-b">
-                                            {user?.date_of_birth}
-                                        </td>
-
-                                        <td className="py-[1vw] border-b">
-                                            {user?.nationality}
-                                        </td>
-                                        <td className="py-[1vw] border-b">
-                                            {user?.id_type}
-                                        </td>
-                                        <td className="py-[1vw] border-b">
-                                            {user?.profession}
-                                        </td>
-                                        <td className="py-[1vw] border-b">
-                                            {user?.guarantor_first_name} {user?.guarantor_surname}
-                                        </td>
-
-                                        <td className="px-[1vw] border-b">
-                                            <div className="flex space-x-3">
-                                                <button size="sm"
-                                                    className='text-red-600 flex items-center justify-center'
-                                                    onClick={() => handleDeleteClick(user)}
-                                                >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-trash3-fill w-5 h-5" viewBox="0 0 16 16">
-                                                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                                                </svg>
-                                                </button>
-                                                <button size="sm"
-                                                    className='text-blue-600 flex items-center justify-center'
-                                                    onClick={() => handleOpenModal(user)}
-                                                >
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-info-circle-fill w-5 h-5" viewBox="0 0 16 16">
-                                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
-                                                </svg>  
-                                                </button>
-                                            </div>
-                                            
-                                        </td>
-                                        </tr>
-                                    );
-                                    })}
-                                </>
-                                )}
-                            </>
-                            ) : (
+                <table className="w-full border-collapse relative">
+                    <thead className="bg-[#08446A] text-white font-normal sticky top-0 z-[20]">
+                        <tr className="text-left">
+                        <th className="px-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">
+                            User
+                            </h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">Telephone</h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">Date of Birth</h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">Nationality</h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">ID Card</h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">Profession</h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">Guarantor</h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">Action</h4>
+                        </th>
+                        </tr>
+                    </thead>
+                    <tbody className="odd:bg-white even:bg-gray-100 text-sm">
+                        {!isLoading ? (
+                        <>
+                            {userData?.length === 0 ? (
                             <tr>
                                 <td colSpan={7} rowSpan={5}>
-                                <div className="w-full h-[35vw] flex items-center justify-center">
-                                <div role="status">
-                                    <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
-                                        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
-                                    </svg>
-                                    <span className="sr-only">Loading...</span>
-                                </div>
+                                <div className="w-full flex flex-col justify-center items-center">
+                                    <img
+                                    src="/assets/img/no-data.svg"
+                                    alt=""
+                                    className="w-24"
+                                    />
+                                    <h4 className="text-sm font-[600]">
+                                    No Data Available
+                                    </h4>
                                 </div>
                                 </td>
                             </tr>
+                            ) : (
+                            <>
+                                {userData?.map((user, i) => {
+                                return (
+                                    <tr key={i}>
+                                    <td className="py-[1vw] pl-2 border-b">
+                                    <h4 className="flex items-center space-x-2">
+                                        <img
+                                            src={user.idcard_front_url}
+                                            alt="ID Card Front"
+                                            className="w-10 h-10 object-cover rounded-full border"
+                                        />
+                                        <div>
+                                            <p className="font-semibold text-sm">{user?.first_name} {user?.surname}</p>
+                                            <p>{user?.email}</p>
+                                        </div>
+                                        
+                                    </h4>
+                                    </td>
+                                    <td className="py-[1vw] border-b">
+                                        {user?.telephone}
+                                    </td>
+                                    <td className="py-[1vw] border-b">
+                                        {user?.date_of_birth}
+                                    </td>
+
+                                    <td className="py-[1vw] border-b">
+                                        {user?.nationality}
+                                    </td>
+                                    <td className="py-[1vw] border-b">
+                                        {user?.id_type}
+                                    </td>
+                                    <td className="py-[1vw] border-b">
+                                        {user?.profession}
+                                    </td>
+                                    <td className="py-[1vw] border-b">
+                                        {user?.guarantor_first_name} {user?.guarantor_surname}
+                                    </td>
+
+                                    <td className="px-[1vw] border-b">
+                                        <div className="flex space-x-3">
+                                            <button size="sm"
+                                                className='text-red-600 flex items-center justify-center'
+                                                onClick={() => handleDeleteClick(user)}
+                                            >
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-trash3-fill w-5 h-5" viewBox="0 0 16 16">
+                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                            </svg>
+                                            </button>
+                                            <button size="sm"
+                                                className='text-blue-600 flex items-center justify-center'
+                                                onClick={() => handleOpenModal(user)}
+                                            >
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-info-circle-fill w-5 h-5" viewBox="0 0 16 16">
+                                            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
+                                            </svg>  
+                                            </button>
+                                        </div>
+                                        
+                                    </td>
+                                    </tr>
+                                );
+                                })}
+                            </>
                             )}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="w-full flex justify-end items-center md:gap-[1vw] gap-[3vw] md:mt-[1vw] mt-[4vw]">
-                    <h4 className="md:text-[1vw] text-[3.5vw]">
-                    Page <span>{userData?.current_page}</span> of{" "}
-                    <span>{userData?.last_page}</span>
-                    </h4>
-                    <div className="flex md:gap-[1vw] gap-[3vw]">
-                    <button
-                        type="button"
-                        onClick={() => {
-                        setPageNumber((prev) => Math.max(prev - 1, 1));
-                        }}
-                        className="md:w-[2.5vw] md:h-[2.5vw] w-[10vw] h-[10vw] rounded-[50%] bg-[#d0d0d0] flex justify-center items-center"
-                    >
-                        <img
-                        src="/assets/img/arr-b.svg"
-                        alt=""
-                        className="md:w-[1.1vw] w-[4vw]"
-                        />
-                    </button>
-                    <button
-                        type="button"
-                        onClick={() => {
-                        setPageNumber((prev) =>
-                            Math.min(prev + 1, userData?.activityLogs?.last_page)
-                        );
-                        }}
-                        className="md:w-[2.5vw] md:h-[2.5vw] w-[10vw] h-[10vw] rounded-[50%] bg-[#d0d0d0] flex justify-center items-center"
-                    >
-                        <img
-                        src="/assets/img/arr-f.svg"
-                        alt=""
-                        className="md:w-[1.1vw] w-[4vw]"
-                        />
-                    </button>
-                    </div>
+                        </>
+                        ) : (
+                        <tr>
+                            <td colSpan={7} rowSpan={5}>
+                            <div className="w-full h-[35vw] flex items-center justify-center">
+                            <div role="status">
+                                <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                                </svg>
+                                <span className="sr-only">Loading...</span>
+                            </div>
+                            </div>
+                            </td>
+                        </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+            <div className="w-full flex justify-end items-center md:gap-[1vw] gap-[3vw] md:mt-[1vw] mt-[4vw]">
+                <h4 className="md:text-[1vw] text-[3.5vw]">
+                Page <span>{userData?.current_page}</span> of{" "}
+                <span>{userData?.last_page}</span>
+                </h4>
+                <div className="flex md:gap-[1vw] gap-[3vw]">
+                <button
+                    type="button"
+                    onClick={() => {
+                    setPageNumber((prev) => Math.max(prev - 1, 1));
+                    }}
+                    className="md:w-[2.5vw] md:h-[2.5vw] w-[10vw] h-[10vw] rounded-[50%] bg-[#d0d0d0] flex justify-center items-center"
+                >
+                    <img
+                    src="/assets/img/arr-b.svg"
+                    alt=""
+                    className="md:w-[1.1vw] w-[4vw]"
+                    />
+                </button>
+                <button
+                    type="button"
+                    onClick={() => {
+                    setPageNumber((prev) =>
+                        Math.min(prev + 1, userData?.activityLogs?.last_page)
+                    );
+                    }}
+                    className="md:w-[2.5vw] md:h-[2.5vw] w-[10vw] h-[10vw] rounded-[50%] bg-[#d0d0d0] flex justify-center items-center"
+                >
+                    <img
+                    src="/assets/img/arr-f.svg"
+                    alt=""
+                    className="md:w-[1.1vw] w-[4vw]"
+                    />
+                </button>
                 </div>
             </div>
-            {openModal && (
-                <UserDetails
-                    setOpenModal={setOpenModal}
-                    openModal={openModal}
-                    userData={selectedUser}
-                />
-            )}
+            <UserDetails
+                setOpenModal={setOpenModal}
+                openModal={openModal}
+                userData={selectedUser}
+            />
             
             {isDeleteDrawerOpen && (
                 <DeleteUserModal

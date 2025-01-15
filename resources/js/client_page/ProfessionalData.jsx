@@ -36,6 +36,15 @@ const ProfessionalData = ({ initialData, saveData }) => {
         { value: "Driving License", name: "Driving License" },
     ];
 
+    const purposeData = [
+        { value: "House advance", name: "House advance" },
+        { value: "House decor", name: "House decor" },
+        { value: "Personal and Family", name: "Personal and Family" },
+        { value: "Business", name: "Business" },
+        { value: "Buy used car", name: "Buy used car" },
+        { value: "Others", name: "Others" },
+    ];
+
     return (
         <form className="grid lg:grid-cols-2 gap-4 mb-6">
             <Select
@@ -60,7 +69,7 @@ const ProfessionalData = ({ initialData, saveData }) => {
                 onChange={handleChange}
             />
             <InputField
-                label="Bank Details"
+                label="IBAN Number"
                 type="text"
                 name="bank_details"
                 value={initialData.bank_details}
@@ -73,7 +82,13 @@ const ProfessionalData = ({ initialData, saveData }) => {
                 onChange={handleChange}
                 menuItems={idTypes}
             />
-            <div className=""></div>
+            <Select
+                label="Purpose for Loan"
+                name="loan_purpose"
+                value={initialData.loan_purpose}
+                onChange={handleChange}
+                menuItems={purposeData}
+            />
             <div className="w-[100%] h-[8rem] mb-4">
                 <h4 className="text-[0.9rem] mb-[0.4rem] font-semibold">ID Card Front</h4>
                 <div className="w-full h-full flex justify-center items-center rounded-[0.6rem] border">

@@ -11,9 +11,10 @@ export default {
     ],
     theme: {
         extend: {
-            fontFamily: {
-                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            fontFamily: { 
+                "poppins": ['Poppins', 'serif'],
             },
+        
         },
     },
     plugins: [],
