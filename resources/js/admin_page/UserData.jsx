@@ -40,8 +40,10 @@ const UserData = () => {
                 ...user,
                 idcard_front_url: user.idcard_front ? `${BASE_URL}${user.idcard_front}` : null,
                 idcard_back_url: user.idcard_back ? `${BASE_URL}${user.idcard_back}` : null,
+                applicant_signature_url: user.applicant_signature ? `${BASE_URL}${user.applicant_signature}` : null,
                 guarantor_idcard_back_url: user.guarantor_idcard_back ? `${BASE_URL}${user.guarantor_idcard_back}` : null,
                 guarantor_idcard_front_url: user.guarantor_idcard_front ? `${BASE_URL}${user.guarantor_idcard_front}` : null,
+                guarantor_signature_url: user.guarantor_signature ? `${BASE_URL}${user.guarantor_signature}` : null,
             }));
 
             setUserData(processedUsers);

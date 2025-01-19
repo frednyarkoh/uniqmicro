@@ -14,8 +14,8 @@ const OfficeUse = ({ saveData, initialData }) => {
       const totalAmount = amount + rate; // Sum of amount and rate
       updatedData = {
         ...updatedData,
-        rate: rate.toFixed(2), // Fixed to 2 decimal places
-        total_amount: totalAmount.toFixed(2), // Fixed to 2 decimal places
+        rate: rate.toFixed(2),
+        total_amount: totalAmount.toFixed(2),
       };
     }
 
@@ -46,6 +46,13 @@ const OfficeUse = ({ saveData, initialData }) => {
         type="number"
         name="total_amount"
         value={formData.total_amount || ""}
+        onChange={handleChange}
+      />
+      <InputField
+        label="Number of Days"
+        type="number"
+        name="number_of_days"
+        value={formData.number_of_days || ""}
         onChange={handleChange}
       />
     </form>

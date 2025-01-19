@@ -25,7 +25,7 @@ const UserForm = () => {
                     guarantor_city: "", guarantor_province: "",
                     guarantor_postal_code: "", guarantor_id_type: "", 
                     guarantor_idcard_front: "", guarantor_idcard_back: "", guarantor_nationality: "", guarantor_signature: "" },
-    officeData: {amount: "", rate: "", total_amount: ""}
+    officeData: {amount: "", rate: "", total_amount: "", number_of_days: ""}
   });
   const navigate = useNavigate();
 
@@ -126,7 +126,7 @@ const UserForm = () => {
                 guarantor_nationality: "",
                 guarantor_signature: "",
             },
-            officeData: {amount: "", rate: "", total_amount: ""}
+            officeData: {amount: "", rate: "", total_amount: "", number_of_days: ""}
         });
 
         // Navigate to congrats page

@@ -233,6 +233,12 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                   <img src={userInput?.idcard_back_url} alt="" />
                 </div>
                 <div className="text-gray-500">
+                Applicant Signature
+                </div>
+                <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
+                  <img src={userInput?.applicant_signature_url} alt="" />
+                </div>
+                <div className="text-gray-500">
                 Guarantor ID Card Front
                 </div>
                 <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
@@ -243,6 +249,12 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                 </div>
                 <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
                   <img src={userInput?.guarantor_idcard_back_url} alt="" />
+                </div>
+                <div className="text-gray-500">
+                Guarantor Signature
+                </div>
+                <div className="col-span-2 w-full h-auto bg-gray-200 border rounded-md">
+                  <img src={userInput?.guarantor_signature_url} alt="" />
                 </div>
               </div>
             </div>

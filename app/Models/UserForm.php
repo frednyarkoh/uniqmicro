@@ -13,7 +13,8 @@ class UserForm extends Model
     protected $fillable = [
         // Biodata
         'first_name', 'surname', 'gender', 'date_of_birth', 'nationality',
-        'address', 'telephone', 'email', 'applicant_signature','house_number', 'street_name', 'province', 'postal_code', 'city',
+        'address', 'telephone', 'email', 'applicant_signature','house_number',
+        'street_name', 'province', 'postal_code', 'city',
         // Professional Data
         'profession', 'date_of_payment', 'codice_fiscale', 'bank_details',
         'id_type', 'idcard_front', 'idcard_back','loan_purpose',
@@ -21,8 +22,8 @@ class UserForm extends Model
         'guarantor_first_name', 'guarantor_surname', 'guarantor_telephone',
         'guarantor_street_name', 'guarantor_house_number', 'guarantor_city',
         'guarantor_province', 'guarantor_postal_code', 'guarantor_id_type',
-        'guarantor_idcard_front', 'guarantor_idcard_back', 'guarantor_signature','guarantor_nationality',
+        'guarantor_idcard_front', 'guarantor_idcard_back', 'guarantor_signature', 'guarantor_nationality',
         // Office Use
-        'amount', 'rate','total_amount'
+        'amount', 'rate','total_amount', 'number_of_days'
     ];
 }

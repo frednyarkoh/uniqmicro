@@ -65,7 +65,7 @@ class UserFormController extends Controller
 
     public function export(Request $request)
     {
-        $query = $request->query('query'); // Get search query
+        $query = $request->query('query');
 
         // Example: Fetch filtered data from your database
         $data = UserForm::when($query, function ($q) use ($query) {
@@ -84,12 +84,13 @@ class UserFormController extends Controller
 
         // Set Header Row
         $headers = [
-            'First Name', 'Surname', 'Gender', 'Date of Birth', 'Nationality', 'Address', 'Telephone', 'Email',
+            'First Name', 'Surname', 'Gender', 'Date of Birth', 'Nationality', 'Street Name',
+            'House Number', 'City', 'Province', 'Postal Code', 'Telephone', 'Email',
             'Profession', 'Date of Payment', 'Codice Fiscale', 'Bank Details', 'ID Type',
             'ID Card Front', 'ID Card Back', 'Guarantor First Name', 'Guarantor Surname',
             'Guarantor Telephone', 'Guarantor Street Name', 'Guarantor House Number',
             'Guarantor City', 'Guarantor Province', 'Guarantor Postal Code', 'Guarantor ID Type',
-            'Guarantor ID Card Front', 'Guarantor ID Card Back', 'Amount', 'Rate', 'Total Amount'
+            'Guarantor ID Card Front', 'Guarantor ID Card Back', 'Amount', 'Rate', 'Total Amount', 'Number of Days'
         ];
 
         // Set headers in the first row
@@ -122,35 +123,40 @@ class UserFormController extends Controller
         $sheet->setCellValue('C' . $row, $record->gender);
         $sheet->setCellValue('D' . $row, $record->date_of_birth);
         $sheet->setCellValue('E' . $row, $record->nationality);
-        $sheet->setCellValue('F' . $row, $record->address);
-        $sheet->setCellValue('G' . $row, $record->telephone);
-        $sheet->setCellValue('H' . $row, $record->email);
-        $sheet->setCellValue('I' . $row, $record->profession);
-        $sheet->setCellValue('J' . $row, $record->date_of_payment);
-        $sheet->setCellValue('K' . $row, $record->codice_fiscale);
-        $sheet->setCellValue('L' . $row, $record->bank_details);
-        $sheet->setCellValue('M' . $row, $record->id_type);
-        $sheet->setCellValue('N' . $row, $record->idcard_front);
-        $sheet->setCellValue('O' . $row, $record->idcard_back);
-        $sheet->setCellValue('P' . $row, $record->guarantor_first_name);
-        $sheet->setCellValue('Q' . $row, $record->guarantor_surname);
-        $sheet->setCellValue('R' . $row, $record->guarantor_telephone);
-        $sheet->setCellValue('S' . $row, $record->guarantor_street_name);
-        $sheet->setCellValue('T' . $row, $record->guarantor_house_number);
-        $sheet->setCellValue('U' . $row, $record->guarantor_city);
-        $sheet->setCellValue('V' . $row, $record->guarantor_province);
-        $sheet->setCellValue('W' . $row, $record->guarantor_postal_code);
-        $sheet->setCellValue('X' . $row, $record->guarantor_id_type);
-        $sheet->setCellValue('Y' . $row, $record->guarantor_idcard_front);
-        $sheet->setCellValue('Z' . $row, $record->guarantor_idcard_back);
-        $sheet->setCellValue('AA' . $row, $record->amount);
-        $sheet->setCellValue('AB' . $row, $record->rate);
-        $sheet->setCellValue('AC' . $row, $record->total_amount);
+        $sheet->setCellValue('F' . $row, $record->street_name);
+        $sheet->setCellValue('G' . $row, $record->house_number);
+        $sheet->setCellValue('H' . $row, $record->city);
+        $sheet->setCellValue('I' . $row, $record->province);
+        $sheet->setCellValue('J' . $row, $record->postal_code);
+        $sheet->setCellValue('K' . $row, $record->telephone);
+        $sheet->setCellValue('L' . $row, $record->email);
+        $sheet->setCellValue('M' . $row, $record->profession);
+        $sheet->setCellValue('N' . $row, $record->date_of_payment);
+        $sheet->setCellValue('O' . $row, $record->codice_fiscale);
+        $sheet->setCellValue('P' . $row, $record->bank_details);
+        $sheet->setCellValue('Q' . $row, $record->id_type);
+        $sheet->setCellValue('R' . $row, $record->idcard_front);
+        $sheet->setCellValue('S' . $row, $record->idcard_back);
+        $sheet->setCellValue('T' . $row, $record->guarantor_first_name);
+        $sheet->setCellValue('U' . $row, $record->guarantor_surname);
+        $sheet->setCellValue('V' . $row, $record->guarantor_telephone);
+        $sheet->setCellValue('W' . $row, $record->guarantor_street_name);
+        $sheet->setCellValue('X' . $row, $record->guarantor_house_number);
+        $sheet->setCellValue('Y' . $row, $record->guarantor_city);
+        $sheet->setCellValue('Z' . $row, $record->guarantor_province);
+        $sheet->setCellValue('AA' . $row, $record->guarantor_postal_code);
+        $sheet->setCellValue('AB' . $row, $record->guarantor_id_type);
+        $sheet->setCellValue('AC' . $row, $record->guarantor_idcard_front);
+        $sheet->setCellValue('AD' . $row, $record->guarantor_idcard_back);
+        $sheet->setCellValue('AE' . $row, $record->amount);
+        $sheet->setCellValue('AF' . $row, $record->rate);
+        $sheet->setCellValue('AG' . $row, $record->total_amount);
+        $sheet->setCellValue('AH' . $row, $record->number_of_days);
         $row++;
     }
 
     // Auto-size columns
-    foreach (range('A', 'AC') as $col) {
+    foreach (range('A', 'AH') as $col) {
         $sheet->getColumnDimension($col)->setAutoSize(true);
     }
 
@@ -202,6 +208,7 @@ class UserFormController extends Controller
             'guarantor_province' => 'required|string|max:255',
             'guarantor_postal_code' => 'required|string|max:255',
             'guarantor_id_type' => 'required|string|max:255',
+            'guarantor_nationality' => 'required|string|max:255',
             'guarantor_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'guarantor_idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'guarantor_idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
@@ -209,6 +216,7 @@ class UserFormController extends Controller
             'amount' => 'required|string',
             'rate' => 'required|string',
             'total_amount' => 'required|string',
+            'number_of_days' => 'required|string',
         ]);
 
         // Handle file uploads

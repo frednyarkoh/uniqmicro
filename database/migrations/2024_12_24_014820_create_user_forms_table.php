@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('province');
             $table->string('postal_code');
-            $table->string('applicant_signature');
+            $table->string('applicant_signature')->nullable();
             // Professional Data
             $table->string('profession');
             $table->date('date_of_payment');
@@ -45,13 +45,15 @@ return new class extends Migration
             $table->string('guarantor_province');
             $table->string('guarantor_postal_code');
             $table->string('guarantor_id_type');
-            $table->string('guarantor_signature');
+            $table->string('guarantor_nationality');
+            $table->string('guarantor_signature')->nullable();
             $table->string('guarantor_idcard_front')->nullable();
             $table->string('guarantor_idcard_back')->nullable();
             // Office Use
             $table->string('amount');
             $table->string('rate');
             $table->string('total_amount');
+            $table->string('number_of_days');
             $table->timestamps();
         });
     }
