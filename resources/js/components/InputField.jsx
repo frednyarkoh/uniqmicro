@@ -14,13 +14,13 @@ const InputField = ({
     <div className={className}>
         <label className="block mb-1 text-sm font-medium text-gray-900">{label}</label>
         <input
-            className="bg-gray-50 border border-blue-200 text-gray-900 text-sm rounded-sm focus:outline-none block w-full p-2.5"
-            placeholder={placeholder}
-            name={name}
-            onChange={onChange}
-            value={value}
-            type={type}
-            readOnly={readOnly}
+          className="bg-gray-50 border border-blue-200 text-gray-900 text-sm rounded-sm focus:outline-none block w-full p-3"
+          placeholder={placeholder}
+          name={name}
+          onChange={onChange}
+          value={value}
+          type={type}
+          readOnly={readOnly}
         />
     </div>
   );

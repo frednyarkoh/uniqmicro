@@ -18,10 +18,14 @@ return new class extends Migration
             $table->string('gender');
             $table->date('date_of_birth');
             $table->string('nationality');
-            $table->string('address');
             $table->string('telephone');
             $table->string('email');
             $table->string('loan_purpose');
+            $table->string('house_number');
+            $table->string('street_name');
+            $table->string('city');
+            $table->string('province');
+            $table->string('postal_code');
             $table->string('applicant_signature');
             // Professional Data
             $table->string('profession');

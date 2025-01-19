@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import SideModal from "@/components/SideModal";
 import moment from "moment";
+import axios from "axios";
+import { isRouteErrorResponse } from "react-router-dom";
 
 function UserDetails({ setOpenModal, openModal, userData }) {
   const initialUserInput = {
@@ -9,6 +11,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
   };
 
   const [userInput, setUserInput] = useState(initialUserInput);
+  const [isPrinting, setIsPrinting] = useState(false);
 
   useEffect(() => {
     if (openModal) {
@@ -16,9 +19,26 @@ function UserDetails({ setOpenModal, openModal, userData }) {
     }
   }, [openModal, userData]);
 
-  const handleUserInput = (e) => {
-    const { name, value } = e.target;
-    setUserInput({ ...userInput, [name]: value });
+  const handleDownloadPDF = async () => {
+    setIsPrinting(true)
+    const userId = userInput.id;
+    try {
+      const response = await axios.get(`/api/user-forms/${userId}/download-pdf`, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `user_form_${userId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setIsPrinting(false)
+    } catch (error) {
+      setIsPrinting(false)
+      console.error("Error downloading the PDF:", error);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -32,6 +52,8 @@ function UserDetails({ setOpenModal, openModal, userData }) {
       title="User Details"
       setOpenModal={setOpenModal}
       openModal={openModal}
+      onClick={handleDownloadPDF}
+      isPrinting={isPrinting}
     >
       <form
         onSubmit={handleSubmit}
@@ -64,10 +86,34 @@ function UserDetails({ setOpenModal, openModal, userData }) {
               {userInput?.nationality || "N/A"}
             </div>
             <div className="text-gray-500">
-              Address
+              Street Name
             </div>
             <div className="col-span-2">
-              {userInput?.address || "N/A"}
+              {userInput?.street_name || "N/A"}
+            </div>
+            <div className="text-gray-500">
+              House Number
+            </div>
+            <div className="col-span-2">
+              {userInput?.house_number || "N/A"}
+            </div>
+            <div className="text-gray-500">
+              City
+            </div>
+            <div className="col-span-2">
+              {userInput?.city || "N/A"}
+            </div>
+            <div className="text-gray-500">
+              Province
+            </div>
+            <div className="col-span-2">
+              {userInput?.province || "N/A"}
+            </div>
+            <div className="text-gray-500">
+              Postal Code
+            </div>
+            <div className="col-span-2">
+              {userInput?.postal_code || "N/A"}
             </div>
             <div className="text-gray-500">
               Telephone

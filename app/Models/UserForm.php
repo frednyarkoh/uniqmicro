@@ -13,7 +13,7 @@ class UserForm extends Model
     protected $fillable = [
         // Biodata
         'first_name', 'surname', 'gender', 'date_of_birth', 'nationality',
-        'address', 'telephone', 'email', 'applicant_signature',
+        'address', 'telephone', 'email', 'applicant_signature','house_number', 'street_name', 'province', 'postal_code', 'city',
         // Professional Data
         'profession', 'date_of_payment', 'codice_fiscale', 'bank_details',
         'id_type', 'idcard_front', 'idcard_back','loan_purpose',

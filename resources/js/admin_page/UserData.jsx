@@ -6,18 +6,23 @@ import InputField from "../components/InputField";
 import UserDetails from "./UserDetails";
 
 const UserData = () => {
-    const [pageNumber, setPageNumber] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [lastPage, setLastPage] = useState(1);
+    const [total, setTotal] = useState(0);
     const [userData, setUserData] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedData, setSelectedData] = useState(false);
     const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
+    const [isExporting, setIsExporting] = useState(false);
 
     const BASE_URL = "http://127.0.0.1:8000/storage/";
     const [submittedFilters, setSubmittedFilters] = useState({});
     const [filters, setFilters] = useState({
         search_query: "",
+        start_date: null,
+        end_date: null,
     });
 
     const fetchUserData = async () => {
@@ -26,7 +31,7 @@ const UserData = () => {
             const response = await axios.get("/api/fetch/user-data",{
                 params: { 
                     ...submittedFilters,
-                    page: pageNumber,
+                    page: currentPage,
                 },
             });
             const users = response.data.users?.data || [];
@@ -40,6 +45,9 @@ const UserData = () => {
             }));
 
             setUserData(processedUsers);
+            setCurrentPage(response.data.users.current_page);
+            setLastPage(response.data.users.last_page);
+            setTotal(response.data.users.total);
         } catch (error) {
             console.error("Error fetching user data:", error.message || error);
         } finally {
@@ -49,14 +57,41 @@ const UserData = () => {
 
     useEffect(() => {
         fetchUserData();
-    }, [submittedFilters, pageNumber]);
+    }, [submittedFilters, currentPage]);
 
     const handleOpenModal = (userData) => {
         setSelectedUser(userData); // Set the user data to pass to the modal
         setOpenModal(true); // Open the modal
       };
 
+      const handlePageChange = (page) => {
+        if (page >= 1 && page <= lastPage) {
+          setCurrentPage(page);
+        }
+      };
+    
+      const renderPageNumbers = () => {
+        const pages = [];
+        for (let i = 1; i <= lastPage; i++) {
+          pages.push(
+            <button
+              key={i}
+              onClick={() => handlePageChange(i)}
+              className={`px-2.5 border rounded-md ${
+                currentPage === i
+                  ? "bg-[#08446A] text-white"
+                  : "bg-white text-gray-800"
+              }`}
+            >
+              {i}
+            </button>
+          );
+        }
+        return pages;
+      };
+
     const handleExport = async () => {
+        setIsExporting(true)
         try {
             const response = await axios.get("/api/export", {
             params: { query: filters.search_query || "" },
@@ -74,8 +109,10 @@ const UserData = () => {
             document.body.appendChild(link);
             link.click();
             link.parentNode.removeChild(link);
+            setIsExporting(false)
         } catch (error) {
             console.error("Error exporting data:", error);
+            setIsExporting(false)
         }
     };
 
@@ -92,7 +129,7 @@ const UserData = () => {
     };
 
     return (
-        <div className="w-full relative flex flex-col justify-center bg-white min-h-screen">
+        <div className="w-full relative flex flex-col bg-white min-h-screen">
             <div className="fixed w-full top-0 flex bg-white py-1.5 px-4 shadow-md z-50 shadow-gray-400">
                 <div className="flex items-center space-x-2">
                     <img src="/images/uniqLogo.png" alt="" className="w-12"/>
@@ -104,8 +141,8 @@ const UserData = () => {
             </div>
             <img src="/images/125.jpg" alt="" className="w-full fixed top-12"/>
         
-            <div className="w-full md:min-h-[40vw] min-h-[100vw] gap-[3vw] overflow-auto bg-[#f8f8f8] p-[1vw] table-cover scroll-width">
-                <div className="w-full">
+            <div className="w-[98vw] gap-[3vw] overflow-auto bg-white p-[1vw] table-cover scroll-width z-40 mx-auto mt-20 min-h-[70vh] border">
+                <div className="w-full mb-2">
                     <form onSubmit={handleSubmit} className="flex flex-row gap-3 items-center mb-1">
                     <InputField
                         radius="none"
@@ -113,39 +150,71 @@ const UserData = () => {
                         placeholder="Search by users or guarantor details"
                         value={filters.search_query}
                         onChange={(e) => setFilters({ ...filters, search_query: e.target.value })}
-                    
-                        className="w-1/2"
+                        className="w-1/3"
                     />
+                    <div class="relative">
+                        <input
+                            type="date"
+                            name="start_date"
+                            value={filters.start_date}
+                            onChange={(e) => setFilters({ ...filters, start_date: e.target.value })}
+                            className="block px-2.5 pb-2.5 pt-3 w-full text-sm text-gray-900 bg-transparent rounded-sm border border-blue-200 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                        <label for="floating_outlined" className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Start Date</label>
+                    </div>
+                    <div class="relative">
+                        <input
+                            type="date"
+                            name="end_date"
+                            value={filters.end_date}
+                            onChange={(e) => setFilters({ ...filters, end_date: e.target.value })}
+                            className="block px-2.5 pb-2.5 pt-3 w-full text-sm text-gray-900 bg-transparent rounded-sm border border-blue-200 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
+                        <label for="floating_outlined" className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">End Date</label>
+                    </div>
                     <div className="flex space-x-2">
                         <button
                         type="submit"
-                        className="rounded-sm px-4 py-1.5 text-sm bg-red-600 text-white"
+                        className="rounded-sm px-4 py-2.5 text-sm bg-red-600 flex items-center space-x-1 text-white"
                         >
-                        Filter
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M5.5 5h13a1 1 0 0 1 .5 1.5L14 12v7l-4-3v-4L5 6.5A1 1 0 0 1 5.5 5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
+                            <p>Filter</p>
                         </button>
                         <button
                         type="button"
-                        className="rounded-sm bg-slate-800 text-white px-4 py-1.5 text-sm"
+                        className="rounded-sm bg-slate-800 text-white flex space-x-1 items-center px-4 py-1.5 text-sm"
                         onClick={() => {
                             setFilters({
-                            search_query: "",
+                                search_query: "",
+                                start_date: "",
+                                end_date: "",
                             });
                     
                             setSubmittedFilters({
-                            search_query: "",
+                                search_query: "",
+                                start_date: "",
+                                end_date: "",
                             });
                     
                         }}
                         >
-                        Clear
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41z" fill="currentColor"></path></svg>
+                            <p>Clear</p>
                         </button>
                     </div>
                     <button
                         type="button"
                         onClick={handleExport}
-                        className="rounded-sm px-4 py-1.5 text-sm bg-blue-600 text-white"
+                        disabled={isExporting}
+                        className="rounded-sm px-4 py-2.5 text-sm bg-blue-600 text-white flex space-x-2 items-center"
                         >
-                        Export Data
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 1024 1024"><path d="M854.6 288.7c6 6 9.4 14.1 9.4 22.6V928c0 17.7-14.3 32-32 32H192c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32h424.7c8.5 0 16.7 3.4 22.7 9.4l215.2 215.3zM790.2 326L602 137.8V326h188.2zM575.34 477.84l-61.22 102.3L452.3 477.8a12 12 0 0 0-10.27-5.79h-38.44a12 12 0 0 0-6.4 1.85a12 12 0 0 0-3.75 16.56l82.34 130.42l-83.45 132.78a12 12 0 0 0-1.84 6.39a12 12 0 0 0 12 12h34.46a12 12 0 0 0 10.21-5.7l62.7-101.47l62.3 101.45a12 12 0 0 0 10.23 5.72h37.48a12 12 0 0 0 6.48-1.9a12 12 0 0 0 3.62-16.58l-83.83-130.55l85.3-132.47a12 12 0 0 0 1.9-6.5a12 12 0 0 0-12-12h-35.7a12 12 0 0 0-10.29 5.84z" fill="currentColor"></path></svg>
+                            {isExporting ? (
+                                <div className="flex items-center gap-2">
+                                    <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 rounded-full"></div>
+                                    <span>Exporting...</span>
+                                </div>
+                            ) : (
+                                "Export"
+                            )}
                     </button>
                     </form>
                 </div>
@@ -173,6 +242,9 @@ const UserData = () => {
                             <h4 className="font-medium text-base">Profession</h4>
                         </th>
                         <th className="pr-3 py-3.5 border-b">
+                            <h4 className="font-medium text-base">Loan Purpose</h4>
+                        </th>
+                        <th className="pr-3 py-3.5 border-b">
                             <h4 className="font-medium text-base">Guarantor</h4>
                         </th>
                         <th className="pr-3 py-3.5 border-b">
@@ -180,19 +252,19 @@ const UserData = () => {
                         </th>
                         </tr>
                     </thead>
-                    <tbody className="odd:bg-white even:bg-gray-100 text-sm">
+                    <tbody className="w-full odd:bg-white even:bg-gray-100 text-sm">
                         {!isLoading ? (
                         <>
                             {userData?.length === 0 ? (
                             <tr>
-                                <td colSpan={7} rowSpan={5}>
+                                <td colSpan={9} rowSpan={5}>
                                 <div className="w-full flex flex-col justify-center items-center">
                                     <img
                                     src="/assets/img/no-data.svg"
                                     alt=""
                                     className="w-24"
                                     />
-                                    <h4 className="text-sm font-[600]">
+                                    <h4 className="text-base py-6 font-[600]">
                                     No Data Available
                                     </h4>
                                 </div>
@@ -234,6 +306,9 @@ const UserData = () => {
                                         {user?.profession}
                                     </td>
                                     <td className="py-[1vw] border-b">
+                                        {user?.loan_purpose}
+                                    </td>
+                                    <td className="py-[1vw] border-b">
                                         {user?.guarantor_first_name} {user?.guarantor_surname}
                                     </td>
 
@@ -266,7 +341,7 @@ const UserData = () => {
                         </>
                         ) : (
                         <tr>
-                            <td colSpan={7} rowSpan={5}>
+                            <td colSpan={9} rowSpan={5}>
                             <div className="w-full h-[35vw] flex items-center justify-center">
                             <div role="status">
                                 <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -282,39 +357,28 @@ const UserData = () => {
                     </tbody>
                 </table>
             </div>
-            <div className="w-full flex justify-end items-center md:gap-[1vw] gap-[3vw] md:mt-[1vw] mt-[4vw]">
+            <div className="w-full flex justify-end items-center md:gap-[1vw] gap-[3vw] md:mt-[1vw] mt-[4vw] z-50 pr-6">
                 <h4 className="md:text-[1vw] text-[3.5vw]">
-                Page <span>{userData?.current_page}</span> of{" "}
-                <span>{userData?.last_page}</span>
+                Page <span>{currentPage}</span> of{" "}
+                <span>{lastPage}</span>
                 </h4>
                 <div className="flex md:gap-[1vw] gap-[3vw]">
                 <button
+                    disabled={currentPage === 1}
                     type="button"
-                    onClick={() => {
-                    setPageNumber((prev) => Math.max(prev - 1, 1));
-                    }}
+                    onClick={() => handlePageChange(currentPage - 1)}
                     className="md:w-[2.5vw] md:h-[2.5vw] w-[10vw] h-[10vw] rounded-[50%] bg-[#d0d0d0] flex justify-center items-center"
                 >
-                    <img
-                    src="/assets/img/arr-b.svg"
-                    alt=""
-                    className="md:w-[1.1vw] w-[4vw]"
-                    />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-gray-700 rotate-180" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M10.02 18l6-6l-6-6l-1.41 1.41L13.19 12l-4.58 4.59z" fill="currentColor"></path></svg>
                 </button>
+                {renderPageNumbers()}
                 <button
                     type="button"
-                    onClick={() => {
-                    setPageNumber((prev) =>
-                        Math.min(prev + 1, userData?.activityLogs?.last_page)
-                    );
-                    }}
+                    disabled={currentPage === lastPage}
+                    onClick={() => handlePageChange(currentPage + 1)}
                     className="md:w-[2.5vw] md:h-[2.5vw] w-[10vw] h-[10vw] rounded-[50%] bg-[#d0d0d0] flex justify-center items-center"
                 >
-                    <img
-                    src="/assets/img/arr-f.svg"
-                    alt=""
-                    className="md:w-[1.1vw] w-[4vw]"
-                    />
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7 text-gray-700" xmlnsXlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24"><path d="M10.02 18l6-6l-6-6l-1.41 1.41L13.19 12l-4.58 4.59z" fill="currentColor"></path></svg>
                 </button>
                 </div>
             </div>

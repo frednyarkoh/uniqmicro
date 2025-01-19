@@ -28,8 +28,8 @@ const BioData = ({ saveData, initialData }) => {
     };
 
     const menuItems = [
-        { value: "male", name: "Male" },
-        { value: "female", name: "Female" },
+        { value: "Male", name: "Male" },
+        { value: "Female", name: "Female" },
     ];
   return (
     <form className="grid lg:grid-cols-2 gap-4">
@@ -70,10 +70,38 @@ const BioData = ({ saveData, initialData }) => {
         menuItems={countries}
       />
       <InputField
-        label="Address"
-        type={`text`}
-        name="address"
-        value={formData.address}
+        label="Street Name"
+        type="text"
+        name="street_name"
+        value={formData.street_name}
+        onChange={handleChange}
+      />
+      <InputField
+        label="House Number"
+        type="text"
+        name="house_number"
+        value={formData.house_number}
+        onChange={handleChange}
+      />
+      <InputField
+        label="City"
+        type="text"
+        name="city"
+        value={formData.city}
+        onChange={handleChange}
+      />
+      <InputField
+        label="Province"
+        type="text"
+        name="province"
+        value={formData.province}
+        onChange={handleChange}
+      />
+      <InputField
+        label="Postal Code"
+        type="text"
+        name="postal_code"
+        value={formData.postal_code}
         onChange={handleChange}
       />
       <InputField

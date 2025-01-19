@@ -12,6 +12,7 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Font;
+use Carbon\Carbon;
 
 class UserFormController extends Controller
 {
@@ -21,7 +22,8 @@ class UserFormController extends Controller
     public function index(Request $request)
     {
         $query = UserForm::query();
-
+        $startDate = $request->query('start_date');
+        $endDate = $request->query('end_date');
         if ($request->filled('search_query')) {
             $searchTerm = $request->search_query;
 
@@ -35,7 +37,15 @@ class UserFormController extends Controller
                     ->orWhere('telephone', 'LIKE', "%{$searchTerm}%");
             });
         }
-        $users = $query->paginate(10);
+
+        $query->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+            $startDateParsed = Carbon::parse($startDate)->startOfDay();
+            $endDateParsed = Carbon::parse($endDate)->endOfDay();
+
+            return $query->whereBetween('user_forms.created_at', [$startDateParsed, $endDateParsed]);
+        });
+        
+        $users = $query->paginate(15);
 
         return response()->json([
             'status' => 200,
@@ -165,8 +175,12 @@ class UserFormController extends Controller
             'gender' => 'required|string',
             'date_of_birth' => 'required|date',
             'nationality' => 'required|string|max:255',
-            'address' => 'required|string',
             'telephone' => 'required|string',
+            'street_name' => 'required|string',
+            'house_number' => 'required|string',
+            'city' => 'required|string',
+            'province' => 'required|string',
+            'postal_code' => 'required|string',
             'email' => 'required|email|max:255',
             'applicant_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // Professional Data
@@ -206,12 +220,20 @@ class UserFormController extends Controller
             $validatedData['idcard_back'] = $request->file('idcard_back')->store('idcards', 'public');
         }
 
+        if ($request->hasFile('applicant_signature')) {
+            $validatedData['applicant_signature'] = $request->file('applicant_signature')->store('signatures', 'public');
+        }
+
         if ($request->hasFile('guarantor_idcard_front')) {
             $validatedData['guarantor_idcard_front'] = $request->file('guarantor_idcard_front')->store('idcards', 'public');
         }
 
         if ($request->hasFile('guarantor_idcard_back')) {
             $validatedData['guarantor_idcard_back'] = $request->file('guarantor_idcard_back')->store('idcards', 'public');
+        }
+
+        if ($request->hasFile('guarantor_signature')) {
+            $validatedData['guarantor_signature'] = $request->file('guarantor_signature')->store('signatures', 'public');
         }
 
         // Save the form data

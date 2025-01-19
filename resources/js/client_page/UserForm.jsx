@@ -13,14 +13,18 @@ const UserForm = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    biodata: { first_name: "", surname: "", gender: "", date_of_birth: "", nationality: "", address: "", telephone: "", email: "" },
+    biodata: { first_name: "", surname: "", gender: "", date_of_birth: "", nationality: "", telephone: "", email: "", house_number: "", applicant_signature: "",
+        street_name: "",
+        city: "",
+        province: "",
+        postal_code: "", },
     professionalData: { profession: "", date_of_payment: "",  codice_fiscale: "", id_type: "",  idcard_front: "", idcard_back: "", bank_details: "", loan_purpose: "" },
     guarantorData: { guarantor_first_name: "", 
                     guarantor_surname: "", guarantor_telephone: "", 
                     guarantor_street_name: "", guarantor_house_number: "", 
                     guarantor_city: "", guarantor_province: "",
                     guarantor_postal_code: "", guarantor_id_type: "", 
-                    guarantor_idcard_front: "", guarantor_idcard_back: "", guarantor_nationality: "" },
+                    guarantor_idcard_front: "", guarantor_idcard_back: "", guarantor_nationality: "", guarantor_signature: "" },
     officeData: {amount: "", rate: "", total_amount: ""}
   });
   const navigate = useNavigate();
@@ -88,7 +92,11 @@ const UserForm = () => {
                 gender: "",
                 date_of_birth: "",
                 nationality: "",
-                address: "",
+                house_number: "",
+                street_name: "",
+                city: "",
+                province: "",
+                postal_code: "",
                 telephone: "",
                 email: "",
                 applicant_signature: "",
