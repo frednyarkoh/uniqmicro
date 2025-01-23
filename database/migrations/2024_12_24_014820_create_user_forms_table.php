@@ -53,7 +53,7 @@ return new class extends Migration
             $table->string('amount');
             $table->string('rate');
             $table->string('total_amount');
-            $table->string('number_of_days');
+            $table->string('number_of_months');
             $table->timestamps();
         });
     }

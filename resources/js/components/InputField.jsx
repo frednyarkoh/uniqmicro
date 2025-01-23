@@ -8,7 +8,8 @@ const InputField = ({
   className,
   placeholder,
   type,
-  readOnly
+  readOnly,
+  required
 }) => {
   return (
     <div className={className}>
@@ -21,6 +22,7 @@ const InputField = ({
           value={value}
           type={type}
           readOnly={readOnly}
+          required={required}
         />
     </div>
   );

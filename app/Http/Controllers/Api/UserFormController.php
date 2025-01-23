@@ -90,7 +90,7 @@ class UserFormController extends Controller
             'ID Card Front', 'ID Card Back', 'Guarantor First Name', 'Guarantor Surname',
             'Guarantor Telephone', 'Guarantor Street Name', 'Guarantor House Number',
             'Guarantor City', 'Guarantor Province', 'Guarantor Postal Code', 'Guarantor ID Type',
-            'Guarantor ID Card Front', 'Guarantor ID Card Back', 'Amount', 'Rate', 'Total Amount', 'Number of Days'
+            'Guarantor ID Card Front', 'Guarantor ID Card Back', 'Amount', 'Rate', 'Total Amount', 'Number of Months'
         ];
 
         // Set headers in the first row
@@ -151,7 +151,7 @@ class UserFormController extends Controller
         $sheet->setCellValue('AE' . $row, $record->amount);
         $sheet->setCellValue('AF' . $row, $record->rate);
         $sheet->setCellValue('AG' . $row, $record->total_amount);
-        $sheet->setCellValue('AH' . $row, $record->number_of_days);
+        $sheet->setCellValue('AH' . $row, $record->number_of_months);
         $row++;
     }
 
@@ -216,7 +216,7 @@ class UserFormController extends Controller
             'amount' => 'required|string',
             'rate' => 'required|string',
             'total_amount' => 'required|string',
-            'number_of_days' => 'required|string',
+            'number_of_months' => 'required|string',
         ]);
 
         // Handle file uploads

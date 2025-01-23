@@ -57,77 +57,97 @@ function UserDetails({ setOpenModal, openModal, userData }) {
     >
       <form
         onSubmit={handleSubmit}
-        className="md:px-[1vw] px-[5vw] w-full overflow-auto pt-[1vw]"
+        className="w-full overflow-auto"
       >
         <div className="flex flex-col">
-          <div className="grid grid-cols-3 gap-y-4 gap-x-2 border-b pb-4">
-            <div className="text-gray-500">
-              Full Name
-            </div>
-            <div className="col-span-2">
-              {userInput?.first_name} {userInput?.surname}
-            </div>
-            <div className="text-gray-500">
-              Gender
-            </div>
-            <div className="col-span-2">
-              {userInput.gender}
-            </div>
-            <div className="text-gray-500">
-              Date of Birth
-            </div>
-            <div className="col-span-2">
-              {moment(userInput?.date_of_birth).format("Do MMMM, YYYY")}
-            </div>
-            <div className="text-gray-500">
-              Nationality
-            </div>
-            <div className="col-span-2">
-              {userInput?.nationality || "N/A"}
-            </div>
-            <div className="text-gray-500">
-              Street Name
-            </div>
-            <div className="col-span-2">
-              {userInput?.street_name || "N/A"}
-            </div>
-            <div className="text-gray-500">
-              House Number
-            </div>
-            <div className="col-span-2">
-              {userInput?.house_number || "N/A"}
-            </div>
-            <div className="text-gray-500">
-              City
-            </div>
-            <div className="col-span-2">
-              {userInput?.city || "N/A"}
-            </div>
-            <div className="text-gray-500">
-              Province
-            </div>
-            <div className="col-span-2">
-              {userInput?.province || "N/A"}
-            </div>
-            <div className="text-gray-500">
-              Postal Code
-            </div>
-            <div className="col-span-2">
-              {userInput?.postal_code || "N/A"}
-            </div>
-            <div className="text-gray-500">
-              Telephone
-            </div>
-            <div className="col-span-2">
-              {userInput?.telephone || "N/A"}
-            </div>
-            <div className="text-gray-500">
-              Email
-            </div>
-            <div className="col-span-2">
-            {userInput?.email}
-            </div>
+          <div className="bg-yellow-100 w-full flex justify-between py-2 px-2">
+            <p className="font-semibold">Date of filling forms</p>
+            <p>
+            {userInput?.created_at
+              ? new Date(userInput.created_at).toLocaleString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                  hour12: true, // Use `false` for 24-hour format
+                })
+              : "N/A"}
+          </p>
+
           </div>
+          <div className="pl-4 pt-4">
+
+          
+            <div className="grid grid-cols-3 gap-y-4 gap-x-2 border-b pb-4">
+              <div className="text-gray-500">
+                Full Name
+              </div>
+              <div className="col-span-2">
+                {userInput?.first_name} {userInput?.surname}
+              </div>
+              <div className="text-gray-500">
+                Gender
+              </div>
+              <div className="col-span-2">
+                {userInput.gender}
+              </div>
+              <div className="text-gray-500">
+                Date of Birth
+              </div>
+              <div className="col-span-2">
+                {moment(userInput?.date_of_birth).format("Do MMMM, YYYY")}
+              </div>
+              <div className="text-gray-500">
+                Nationality
+              </div>
+              <div className="col-span-2">
+                {userInput?.nationality || "N/A"}
+              </div>
+              <div className="text-gray-500">
+                Street Name
+              </div>
+              <div className="col-span-2">
+                {userInput?.street_name || "N/A"}
+              </div>
+              <div className="text-gray-500">
+                House Number
+              </div>
+              <div className="col-span-2">
+                {userInput?.house_number || "N/A"}
+              </div>
+              <div className="text-gray-500">
+                City
+              </div>
+              <div className="col-span-2">
+                {userInput?.city || "N/A"}
+              </div>
+              <div className="text-gray-500">
+                Province
+              </div>
+              <div className="col-span-2">
+                {userInput?.province || "N/A"}
+              </div>
+              <div className="text-gray-500">
+                Postal Code
+              </div>
+              <div className="col-span-2">
+                {userInput?.postal_code || "N/A"}
+              </div>
+              <div className="text-gray-500">
+                Telephone
+              </div>
+              <div className="col-span-2">
+                {userInput?.telephone || "N/A"}
+              </div>
+              <div className="text-gray-500">
+                Email
+              </div>
+              <div className="col-span-2">
+              {userInput?.email}
+              </div>
+            </div>
             <div className="pt-4">
               <p className="font-semibold mb-4 text-base">Other Info</p>
               <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
@@ -163,7 +183,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                 </div>
               </div>
             </div>
-            <div className="pb-4">
+            <div className="py-4">
               <p className="font-semibold mb-4 text-base">Guarantor Info</p>
               <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
                 <div className="text-gray-500">
@@ -217,6 +237,35 @@ function UserDetails({ setOpenModal, openModal, userData }) {
               </div>
             </div>
             <div className="pb-4">
+              <p className="font-semibold mb-4 text-base">Office Use</p>
+              <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
+                <div className="text-gray-500">
+                  Amount
+                </div>
+                <div className="col-span-2">
+                  {userInput?.amount}
+                </div>
+                <div className="text-gray-500">
+                  Number of Months
+                </div>
+                <div className="col-span-2">
+                  {userInput?.number_of_months}
+                </div>
+                <div className="text-gray-500">
+                  Rate
+                </div>
+                <div className="col-span-2">
+                  {userInput?.rate}
+                </div>
+                <div className="text-gray-500">
+                  Total Amount
+                </div>
+                <div className="col-span-2">
+                  {userInput?.total_amount}
+                </div>
+              </div>
+            </div>
+            <div className="pb-4">
               <p className="font-semibold mb-4 text-base">Uploads</p>
               <div className="grid grid-cols-2 gap-y-4 border-b pb-4">
                 
@@ -258,6 +307,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                 </div>
               </div>
             </div>
+          </div>
           </div>
         
       </form>

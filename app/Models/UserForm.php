@@ -24,6 +24,6 @@ class UserForm extends Model
         'guarantor_province', 'guarantor_postal_code', 'guarantor_id_type',
         'guarantor_idcard_front', 'guarantor_idcard_back', 'guarantor_signature', 'guarantor_nationality',
         // Office Use
-        'amount', 'rate','total_amount', 'number_of_days'
+        'amount', 'rate','total_amount', 'number_of_months'
     ];
 }

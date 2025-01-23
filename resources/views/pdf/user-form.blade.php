@@ -226,8 +226,8 @@
                 <td class="value">{{ $userForm->total_amount }}</td>
             </tr>
             <tr>
-                <td class="label">Number of Days</td>
-                <td class="value">{{ $userForm->number_of_days }}</td>
+                <td class="label">Number of Months</td>
+                <td class="value">{{ $userForm->number_of_months }}</td>
             </tr>
         </table>
     </div>

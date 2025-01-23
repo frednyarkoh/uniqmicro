@@ -8,20 +8,25 @@ const OfficeUse = ({ saveData, initialData }) => {
     const { name, value } = e.target;
     let updatedData = { ...formData, [name]: value };
 
-    if (name === "amount") {
-      const amount = parseFloat(value) || 0;
-      const rate = amount * 0.1; // 10% of the amount
-      const totalAmount = amount + rate; // Sum of amount and rate
-      updatedData = {
-        ...updatedData,
-        rate: rate.toFixed(2),
-        total_amount: totalAmount.toFixed(2),
-      };
+    if (name === "amount" || name === "number_of_months") {
+        const amount = parseFloat(updatedData.amount) || 0;
+        const numberOfMonths = parseInt(updatedData.number_of_months, 10) || 0;
+
+        // Calculate the rate based on 10% for each month
+        const rate = amount * 0.1 * numberOfMonths;
+        const totalAmount = amount + rate; // Sum of amount and rate
+
+        updatedData = {
+            ...updatedData,
+            rate: rate.toFixed(2),
+            total_amount: totalAmount.toFixed(2),
+        };
     }
 
     setFormData(updatedData);
     saveData(updatedData);
-  };
+};
+
 
   return (
     <form className="grid lg:grid-cols-2 gap-4">
@@ -33,7 +38,14 @@ const OfficeUse = ({ saveData, initialData }) => {
         onChange={handleChange}
       />
       <InputField
-        label="Rate"
+        label="Number of Months"
+        type="number"
+        name="number_of_months"
+        value={formData.number_of_months || ""}
+        onChange={handleChange}
+      />
+      <InputField
+        label="Rate (10% per month)"
         readOnly={true}
         type="number"
         name="rate"
@@ -46,13 +58,6 @@ const OfficeUse = ({ saveData, initialData }) => {
         type="number"
         name="total_amount"
         value={formData.total_amount || ""}
-        onChange={handleChange}
-      />
-      <InputField
-        label="Number of Days"
-        type="number"
-        name="number_of_days"
-        value={formData.number_of_days || ""}
         onChange={handleChange}
       />
     </form>
