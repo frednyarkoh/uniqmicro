@@ -86,11 +86,11 @@ class UserFormController extends Controller
         $headers = [
             'First Name', 'Surname', 'Gender', 'Date of Birth', 'Nationality', 'Street Name',
             'House Number', 'City', 'Province', 'Postal Code', 'Telephone', 'Email',
-            'Profession', 'Date of Payment', 'Codice Fiscale', 'Bank Details', 'ID Type',
+            'Profession', 'Dates of Payment', 'Codice Fiscale', 'Bank Details', 'ID Type',
             'ID Card Front', 'ID Card Back', 'Guarantor First Name', 'Guarantor Surname',
             'Guarantor Telephone', 'Guarantor Street Name', 'Guarantor House Number',
             'Guarantor City', 'Guarantor Province', 'Guarantor Postal Code', 'Guarantor ID Type',
-            'Guarantor ID Card Front', 'Guarantor ID Card Back', 'Amount', 'Rate', 'Total Amount', 'Number of Months'
+            'Guarantor ID Card Front', 'Guarantor ID Card Back', 'Principal Amount', 'Duration', 'Rate per month', 'Total Amount'
         ];
 
         // Set headers in the first row
@@ -149,9 +149,10 @@ class UserFormController extends Controller
         $sheet->setCellValue('AC' . $row, $record->guarantor_idcard_front);
         $sheet->setCellValue('AD' . $row, $record->guarantor_idcard_back);
         $sheet->setCellValue('AE' . $row, $record->amount);
+        $sheet->setCellValue('AH' . $row, $record->number_of_months);
         $sheet->setCellValue('AF' . $row, $record->rate);
         $sheet->setCellValue('AG' . $row, $record->total_amount);
-        $sheet->setCellValue('AH' . $row, $record->number_of_months);
+        
         $row++;
     }
 

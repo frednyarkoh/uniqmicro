@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import SideModal from "@/components/SideModal";
 import moment from "moment";
 import axios from "axios";
-import { isRouteErrorResponse } from "react-router-dom";
 
 function UserDetails({ setOpenModal, openModal, userData }) {
   const initialUserInput = {
@@ -44,7 +43,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Submitted User Input: ", userInput);
-    setOpenModal(false); // Close modal on submit
+    setOpenModal(false);
   };
 
   return (
@@ -160,7 +159,7 @@ function UserDetails({ setOpenModal, openModal, userData }) {
                 <div className="text-gray-500">
                   Date of Payment
                 </div>
-                <div className="col-span-2">
+                <div className="col-span-2 text-sm">
                   {userInput?.date_of_payment}
                 </div>
                 <div className="text-gray-500">
@@ -240,19 +239,19 @@ function UserDetails({ setOpenModal, openModal, userData }) {
               <p className="font-semibold mb-4 text-base">Office Use</p>
               <div className="grid grid-cols-3 gap-y-4 border-b pb-4">
                 <div className="text-gray-500">
-                  Amount
+                  Principal Amount
                 </div>
                 <div className="col-span-2">
                   {userInput?.amount}
                 </div>
                 <div className="text-gray-500">
-                  Number of Months
+                  Duration
                 </div>
                 <div className="col-span-2">
                   {userInput?.number_of_months}
                 </div>
                 <div className="text-gray-500">
-                  Rate
+                  Rate per month
                 </div>
                 <div className="col-span-2">
                   {userInput?.rate}

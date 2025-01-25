@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string('applicant_signature')->nullable();
             // Professional Data
             $table->string('profession');
-            $table->date('date_of_payment');
+            $table->string('date_of_payment');
             $table->string('codice_fiscale');
             $table->string('bank_details');
             $table->string('id_type');

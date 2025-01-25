@@ -214,21 +214,22 @@
         <div class="section-title">Office Data</div>
         <table class="data-table">
             <tr>
-                <td class="label">Amount</td>
+                <td class="label">Principal Amount</td>
                 <td class="value">{{ $userForm->amount }}</td>
             </tr>
             <tr>
-                <td class="label">Rate</td>
+                <td class="label">Duration</td>
+                <td class="value">{{ $userForm->number_of_months }}</td>
+            </tr>
+            <tr>
+                <td class="label">Rate per month</td>
                 <td class="value">{{ $userForm->rate }}</td>
             </tr>
             <tr>
                 <td class="label">Total Amount</td>
                 <td class="value">{{ $userForm->total_amount }}</td>
             </tr>
-            <tr>
-                <td class="label">Number of Months</td>
-                <td class="value">{{ $userForm->number_of_months }}</td>
-            </tr>
+            
         </table>
     </div>
 

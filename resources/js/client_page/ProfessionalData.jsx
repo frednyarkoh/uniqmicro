@@ -55,8 +55,8 @@ const ProfessionalData = ({ initialData, saveData }) => {
                 menuItems={professions}
             />
             <InputField
-                label="Date of Payment"
-                type="date"
+                label="Dates of Payment"
+                type="text"
                 name="date_of_payment"
                 value={initialData.date_of_payment}
                 onChange={handleChange}

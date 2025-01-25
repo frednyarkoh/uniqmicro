@@ -13,8 +13,8 @@ const OfficeUse = ({ saveData, initialData }) => {
         const numberOfMonths = parseInt(updatedData.number_of_months, 10) || 0;
 
         // Calculate the rate based on 10% for each month
-        const rate = amount * 0.1 * numberOfMonths;
-        const totalAmount = amount + rate; // Sum of amount and rate
+        const rate = ((amount * 0.1 * numberOfMonths) + amount) / numberOfMonths;
+        const totalAmount = rate * numberOfMonths;
 
         updatedData = {
             ...updatedData,
@@ -31,21 +31,21 @@ const OfficeUse = ({ saveData, initialData }) => {
   return (
     <form className="grid lg:grid-cols-2 gap-4">
       <InputField
-        label="Amount"
+        label="Principal Amount"
         type="number"
         name="amount"
         value={formData.amount || ""}
         onChange={handleChange}
       />
       <InputField
-        label="Number of Months"
+        label="Duration"
         type="number"
         name="number_of_months"
         value={formData.number_of_months || ""}
         onChange={handleChange}
       />
       <InputField
-        label="Rate (10% per month)"
+        label="Rate per month"
         readOnly={true}
         type="number"
         name="rate"
