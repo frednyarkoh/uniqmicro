@@ -192,7 +192,7 @@ class UserFormController extends Controller
             'applicant_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // Professional Data
             'profession' => 'required|string|max:255',
-            'date_of_payment' => 'required|date',
+            'date_of_payment' => 'required|string',
             'codice_fiscale' => 'required|string|max:255',
             'bank_details' => 'required|string|max:255',
             'id_type' => 'required|string|max:255',
