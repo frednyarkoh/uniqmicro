@@ -156,8 +156,12 @@ class UserFormController extends Controller
         $row++;
     }
 
-    // Auto-size columns
-    foreach (range('A', 'AH') as $col) {
+    $columns = [];
+    for ($col = 'A'; $col != 'AI'; $col++) {  // 'AI' is after 'AH'
+        $columns[] = $col;
+    }
+
+    foreach ($columns as $col) {
         $sheet->getColumnDimension($col)->setAutoSize(true);
     }
 
