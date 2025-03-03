@@ -239,13 +239,13 @@
         <div class="row">
             @if (file_exists(public_path('storage/' . $userForm->idcard_front)))
                 <div>
-                    <img src="{{ asset('storage/' . $userForm->idcard_front) }}" alt="Applicant ID Card Front">
+                    <img src="{{ public_path('storage/' . $userForm->idcard_front) }}" alt="Applicant ID Card Front">
                     <div class="label">ID Card Front</div>
                 </div>
             @endif
             @if (file_exists(public_path('storage/' . $userForm->idcard_back)))
                 <div>
-                    <img src="{{ asset('storage/' . $userForm->idcard_back) }}" alt="Applicant ID Card Back">
+                    <img src="{{ public_path('storage/' . $userForm->idcard_back) }}" alt="Applicant ID Card Back">
                     <div class="label">ID Card Back</div>
                 </div>
             @endif
@@ -255,13 +255,13 @@
         <div class="row">
             @if (file_exists(public_path('storage/' . $userForm->guarantor_idcard_front)))
                 <div>
-                    <img src="{{ asset('storage/' . $userForm->guarantor_idcard_front) }}" alt="Guarantor ID Card Front">
+                    <img src="{{ public_path('storage/' . $userForm->guarantor_idcard_front) }}" alt="Guarantor ID Card Front">
                     <div class="label">Guarantor ID Card Front</div>
                 </div>
             @endif
             @if (file_exists(public_path('storage/' . $userForm->guarantor_idcard_back)))
                 <div>
-                    <img src="{{ asset('storage/' . $userForm->guarantor_idcard_back) }}" alt="Guarantor ID Card Back">
+                    <img src="{{ public_path('storage/' . $userForm->guarantor_idcard_back) }}" alt="Guarantor ID Card Back">
                     <div class="label">Guarantor ID Card Back</div>
                 </div>
             @endif
@@ -271,13 +271,13 @@
         <div class="row">
             @if (file_exists(public_path('storage/' . $userForm->applicant_signature)))
                 <div>
-                    <img src="{{ asset('storage/' . $userForm->applicant_signature) }}" alt="Applicant Signature">
+                    <img src="{{ public_path('storage/' . $userForm->applicant_signature) }}" alt="Applicant Signature">
                     <div class="label">Applicant Signature</div>
                 </div>
             @endif
             @if (file_exists(public_path('storage/' . $userForm->guarantor_signature)))
                 <div>
-                    <img src="{{ asset('storage/' . $userForm->guarantor_signature) }}" alt="Guarantor Signature">
+                    <img src="{{ public_path('storage/' . $userForm->guarantor_signature) }}" alt="Guarantor Signature">
                     <div class="label">Guarantor Signature</div>
                 </div>
             @endif
