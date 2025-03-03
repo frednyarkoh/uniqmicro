@@ -149,9 +149,9 @@ class UserFormController extends Controller
         $sheet->setCellValue('AC' . $row, $record->guarantor_idcard_front);
         $sheet->setCellValue('AD' . $row, $record->guarantor_idcard_back);
         $sheet->setCellValue('AE' . $row, $record->amount);
-        $sheet->setCellValue('AH' . $row, $record->number_of_months);
-        $sheet->setCellValue('AF' . $row, $record->rate);
-        $sheet->setCellValue('AG' . $row, $record->total_amount);
+        $sheet->setCellValue('AF' . $row, $record->number_of_months);
+        $sheet->setCellValue('AG' . $row, $record->rate);
+        $sheet->setCellValue('AH' . $row, $record->total_amount);
         
         $row++;
     }
