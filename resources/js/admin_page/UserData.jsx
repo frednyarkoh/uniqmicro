@@ -17,7 +17,7 @@ const UserData = () => {
     const [selectedUser, setSelectedUser] = useState(null);
     const [isExporting, setIsExporting] = useState(false);
 
-    const BASE_URL = "http://127.0.0.1:8000/storage/";
+    const BASE_URL = "http://167.86.81.253/storage/";
     const [submittedFilters, setSubmittedFilters] = useState({});
     const [filters, setFilters] = useState({
         search_query: "",
