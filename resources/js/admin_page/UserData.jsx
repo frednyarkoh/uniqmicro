@@ -4,6 +4,7 @@ import Modal from "../components/Modal"
 import toast from "react-hot-toast";
 import InputField from "../components/InputField";
 import UserDetails from "./UserDetails";
+import UserEdit from "./UserEdit";
 
 const UserData = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -14,6 +15,7 @@ const UserData = () => {
     const [selectedData, setSelectedData] = useState(false);
     const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
     const [openModal, setOpenModal] = useState(false);
+    const [openEditModal, setOpenEditModal] = useState(false);
     const [selectedUser, setSelectedUser] = useState(null);
     const [isExporting, setIsExporting] = useState(false);
 
@@ -64,7 +66,12 @@ const UserData = () => {
     const handleOpenModal = (userData) => {
         setSelectedUser(userData); // Set the user data to pass to the modal
         setOpenModal(true); // Open the modal
-      };
+    };
+
+    const handleOpenEditModal = (userData) => {
+        setSelectedUser(userData); // Set the user data to pass to the modal
+        setOpenEditModal(true); // Open the modal
+    };
 
       const handlePageChange = (page) => {
         if (page >= 1 && page <= lastPage) {
@@ -154,7 +161,7 @@ const UserData = () => {
                         onChange={(e) => setFilters({ ...filters, search_query: e.target.value })}
                         className="w-1/3"
                     />
-                    <div class="relative">
+                    <div className="relative">
                         <input
                             type="date"
                             name="start_date"
@@ -163,7 +170,7 @@ const UserData = () => {
                             className="block px-2.5 pb-2.5 pt-3 w-full text-sm text-gray-900 bg-transparent rounded-sm border border-blue-200 appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" " />
                         <label for="floating_outlined" className="absolute text-sm text-gray-500 duration-300 transform -translate-y-4 scale-75 top-2 z-10 origin-[0] bg-white px-2 peer-focus:px-2 peer-focus:text-blue-600 peer-placeholder-shown:scale-100 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:top-1/2 peer-focus:top-2 peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto start-1">Start Date</label>
                     </div>
-                    <div class="relative">
+                    <div className="relative">
                         <input
                             type="date"
                             name="end_date"
@@ -232,9 +239,6 @@ const UserData = () => {
                             <h4 className="font-medium text-base">Telephone</h4>
                         </th>
                         <th className="pr-3 py-3.5 border-b">
-                            <h4 className="font-medium text-base">Date of Birth</h4>
-                        </th>
-                        <th className="pr-3 py-3.5 border-b">
                             <h4 className="font-medium text-base">Nationality</h4>
                         </th>
                         <th className="pr-3 py-3.5 border-b">
@@ -295,10 +299,6 @@ const UserData = () => {
                                         {user?.telephone}
                                     </td>
                                     <td className="py-[1vw] border-b">
-                                        {user?.date_of_birth}
-                                    </td>
-
-                                    <td className="py-[1vw] border-b">
                                         {user?.nationality}
                                     </td>
                                     <td className="py-[1vw] border-b">
@@ -317,12 +317,12 @@ const UserData = () => {
                                     <td className="px-[1vw] border-b">
                                         <div className="flex space-x-3">
                                             <button size="sm"
-                                                className='text-red-600 flex items-center justify-center'
-                                                onClick={() => handleDeleteClick(user)}
-                                            >
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-trash3-fill w-5 h-5" viewBox="0 0 16 16">
-                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
-                                            </svg>
+                                                    className='text-green-600 flex items-center justify-center'
+                                                    onClick={() => handleOpenEditModal(user)}
+                                                >
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 16 16"><g fill="none">
+                                                    <path d="M11.698 5.131l.959-.959a2 2 0 0 0-2.829-2.828L2.442 8.73a2.5 2.5 0 0 0-.658 1.161l-.572 2.291a.5.5 0 0 0 .606.607l2.291-.573a2.5 2.5 0 0 0 1.02-.526A5.52 5.52 0 0 1 5 10.414l-.438.437a1.5 1.5 0 0 1-.697.395l-1.482.37l.37-1.482a1.5 1.5 0 0 1 .395-.697l5.972-5.972l1.414 1.414l-.122.122a5.588 5.588 0 0 1 1.285.13zm-1.87-2.373l.708-.707a1 1 0 1 1 1.414 1.414l-.708.707l-1.414-1.414zM15 10.5a4.5 4.5 0 1 1-9 0a4.5 4.5 0 0 1 9 0zM9.604 7.897a.5.5 0 0 0-.708 0l-1.75 1.75a.498.498 0 0 0-.002.705l1.752 1.752a.5.5 0 1 0 .708-.707l-.897-.896h1.543c.966 0 1.75.783 1.75 1.75v.25a.5.5 0 0 0 1 0v-.25a2.75 2.75 0 0 0-2.75-2.75H8.707l.897-.897a.5.5 0 0 0 0-.707z" fill="currentColor"></path></g>
+                                                </svg>  
                                             </button>
                                             <button size="sm"
                                                 className='text-blue-600 flex items-center justify-center'
@@ -332,6 +332,16 @@ const UserData = () => {
                                             <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2"/>
                                             </svg>  
                                             </button>
+                                            <button size="sm"
+                                                className='text-red-600 flex items-center justify-center'
+                                                onClick={() => handleDeleteClick(user)}
+                                            >
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-trash3-fill w-5 h-5" viewBox="0 0 16 16">
+                                            <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+                                            </svg>
+                                            </button>
+                                            
+                                            
                                         </div>
                                         
                                     </td>
@@ -388,6 +398,13 @@ const UserData = () => {
                 setOpenModal={setOpenModal}
                 openModal={openModal}
                 userData={selectedUser}
+            />
+
+            <UserEdit
+                setOpenModal={setOpenEditModal}
+                openModal={openEditModal}
+                userData={selectedUser}
+                fetchUserData={fetchUserData}
             />
             
             {isDeleteDrawerOpen && (

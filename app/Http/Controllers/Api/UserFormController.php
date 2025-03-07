@@ -181,39 +181,39 @@ class UserFormController extends Controller
     {
         $validatedData = $request->validate([
             // Biodata
-            'first_name' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
-            'gender' => 'required|string',
-            'date_of_birth' => 'required|date',
-            'nationality' => 'required|string|max:255',
-            'telephone' => 'required|string',
-            'street_name' => 'required|string',
-            'house_number' => 'required|string',
-            'city' => 'required|string',
-            'province' => 'required|string',
-            'postal_code' => 'required|string',
-            'email' => 'required|email|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'surname' => 'nullable|string|max:255',
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'nationality' => 'nullable|string|max:255',
+            'telephone' => 'nullable|string',
+            'street_name' => 'nullable|string',
+            'house_number' => 'nullable|string',
+            'city' => 'nullable|string',
+            'province' => 'nullable|string',
+            'postal_code' => 'nullable|string',
+            'email' => 'nullable|email|max:255',
             'applicant_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // Professional Data
-            'profession' => 'required|string|max:255',
-            'date_of_payment' => 'required|string',
-            'codice_fiscale' => 'required|string|max:255',
-            'bank_details' => 'required|string|max:255',
-            'id_type' => 'required|string|max:255',
-            'loan_purpose' => 'required|string|max:255',
+            'profession' => 'nullable|string|max:255',
+            'date_of_payment' => 'nullable|string',
+            'codice_fiscale' => 'nullable|string|max:255',
+            'bank_details' => 'nullable|string|max:255',
+            'id_type' => 'nullable|string|max:255',
+            'loan_purpose' => 'nullable|string|max:255',
             'idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             // Guarantor Data
-            'guarantor_first_name' => 'required|string|max:255',
-            'guarantor_surname' => 'required|string|max:255',
-            'guarantor_telephone' => 'required|string|max:255',
-            'guarantor_street_name' => 'required|string|max:255',
-            'guarantor_house_number' => 'required|string|max:255',
-            'guarantor_city' => 'required|string|max:255',
-            'guarantor_province' => 'required|string|max:255',
-            'guarantor_postal_code' => 'required|string|max:255',
-            'guarantor_id_type' => 'required|string|max:255',
-            'guarantor_nationality' => 'required|string|max:255',
+            'guarantor_first_name' => 'nullable|string|max:255',
+            'guarantor_surname' => 'nullable|string|max:255',
+            'guarantor_telephone' => 'nullable|string|max:255',
+            'guarantor_street_name' => 'nullable|string|max:255',
+            'guarantor_house_number' => 'nullable|string|max:255',
+            'guarantor_city' => 'nullable|string|max:255',
+            'guarantor_province' => 'nullable|string|max:255',
+            'guarantor_postal_code' => 'nullable|string|max:255',
+            'guarantor_id_type' => 'nullable|string|max:255',
+            'guarantor_nationality' => 'nullable|string|max:255',
             'guarantor_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'guarantor_idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
             'guarantor_idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
@@ -259,6 +259,85 @@ class UserFormController extends Controller
     
     }
 
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            // Biodata
+            'first_name' => 'nullable|string|max:255',
+            'surname' => 'nullable|string|max:255',
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'nationality' => 'nullable|string|max:255',
+            'telephone' => 'nullable|string',
+            'street_name' => 'nullable|string',
+            'house_number' => 'nullable|string',
+            'city' => 'nullable|string',
+            'province' => 'nullable|string',
+            'postal_code' => 'nullable|string',
+            'email' => 'nullable|email|max:255',
+            // Professional Data
+            'profession' => 'nullable|string|max:255',
+            'date_of_payment' => 'nullable|string',
+            'codice_fiscale' => 'nullable|string|max:255',
+            'bank_details' => 'nullable|string|max:255',
+            'id_type' => 'nullable|string|max:255',
+            'loan_purpose' => 'nullable|string|max:255',
+            // Guarantor Data
+            'guarantor_first_name' => 'nullable|string|max:255',
+            'guarantor_surname' => 'nullable|string|max:255',
+            'guarantor_telephone' => 'nullable|string|max:255',
+            'guarantor_street_name' => 'nullable|string|max:255',
+            'guarantor_house_number' => 'nullable|string|max:255',
+            'guarantor_city' => 'nullable|string|max:255',
+            'guarantor_province' => 'nullable|string|max:255',
+            'guarantor_postal_code' => 'nullable|string|max:255',
+            'guarantor_id_type' => 'nullable|string|max:255',
+            'guarantor_nationality' => 'nullable|string|max:255',
+            // Office Use
+            'amount' => 'nullable|string',
+            'rate' => 'nullable|string',
+            'total_amount' => 'nullable|string',
+            'number_of_months' => 'nullable|string',
+        ]);
+
+        // Find the existing record
+        $userForm = UserForm::findOrFail($id);
+
+        // Handle file uploads
+        if ($request->hasFile('idcard_front')) {
+            $validatedData['idcard_front'] = $request->file('idcard_front')->store('idcards', 'public');
+        }
+
+        if ($request->hasFile('idcard_back')) {
+            $validatedData['idcard_back'] = $request->file('idcard_back')->store('idcards', 'public');
+        }
+
+        if ($request->hasFile('applicant_signature')) {
+            $validatedData['applicant_signature'] = $request->file('applicant_signature')->store('signatures', 'public');
+        }
+
+        if ($request->hasFile('guarantor_idcard_front')) {
+            $validatedData['guarantor_idcard_front'] = $request->file('guarantor_idcard_front')->store('idcards', 'public');
+        }
+
+        if ($request->hasFile('guarantor_idcard_back')) {
+            $validatedData['guarantor_idcard_back'] = $request->file('guarantor_idcard_back')->store('idcards', 'public');
+        }
+
+        if ($request->hasFile('guarantor_signature')) {
+            $validatedData['guarantor_signature'] = $request->file('guarantor_signature')->store('signatures', 'public');
+        }
+
+        // Update the record
+        $userForm->update($validatedData);
+
+        return response()->json([
+            'message' => 'User data updated successfully!',
+            'data' => $userForm,
+        ], 200);
+    }
+
+
     /**
      * Display the specified resource.
      */
@@ -275,13 +354,6 @@ class UserFormController extends Controller
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, UserForm $userForm)
-    {
-        //
-    }
 
     /**
      * Remove the specified resource from storage.
