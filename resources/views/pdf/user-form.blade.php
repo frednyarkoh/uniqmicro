@@ -237,52 +237,68 @@
     <div class="images">
         <!-- Applicant ID Cards -->
         <div class="row">
-            @if (file_exists(public_path('storage/' . $userForm->idcard_front)))
+            @if (!empty($userForm->idcard_front) && file_exists(public_path('storage/' . $userForm->idcard_front)))
                 <div>
-                    <img src="{{ public_path('storage/' . $userForm->idcard_front) }}" alt="Applicant ID Card Front">
+                    <img src="{{ asset('storage/' . $userForm->idcard_front) }}" alt="Applicant ID Card Front">
                     <div class="label">ID Card Front</div>
                 </div>
+            @else
+                <p>Applicant ID Card Front not available</p>
             @endif
-            @if (file_exists(public_path('storage/' . $userForm->idcard_back)))
+
+            @if (!empty($userForm->idcard_back) && file_exists(public_path('storage/' . $userForm->idcard_back)))
                 <div>
-                    <img src="{{ public_path('storage/' . $userForm->idcard_back) }}" alt="Applicant ID Card Back">
+                    <img src="{{ asset('storage/' . $userForm->idcard_back) }}" alt="Applicant ID Card Back">
                     <div class="label">ID Card Back</div>
                 </div>
+            @else
+                <p>Applicant ID Card Back not available</p>
             @endif
         </div>
 
         <!-- Guarantor ID Cards -->
         <div class="row">
-            @if (file_exists(public_path('storage/' . $userForm->guarantor_idcard_front)))
+            @if (!empty($userForm->guarantor_idcard_front) && file_exists(public_path('storage/' . $userForm->guarantor_idcard_front)))
                 <div>
-                    <img src="{{ public_path('storage/' . $userForm->guarantor_idcard_front) }}" alt="Guarantor ID Card Front">
+                    <img src="{{ asset('storage/' . $userForm->guarantor_idcard_front) }}" alt="Guarantor ID Card Front">
                     <div class="label">Guarantor ID Card Front</div>
                 </div>
+            @else
+                <p>Guarantor ID Card Front not available</p>
             @endif
-            @if (file_exists(public_path('storage/' . $userForm->guarantor_idcard_back)))
+
+            @if (!empty($userForm->guarantor_idcard_back) && file_exists(public_path('storage/' . $userForm->guarantor_idcard_back)))
                 <div>
-                    <img src="{{ public_path('storage/' . $userForm->guarantor_idcard_back) }}" alt="Guarantor ID Card Back">
+                    <img src="{{ asset('storage/' . $userForm->guarantor_idcard_back) }}" alt="Guarantor ID Card Back">
                     <div class="label">Guarantor ID Card Back</div>
                 </div>
+            @else
+                <p>Guarantor ID Card Back not available</p>
             @endif
         </div>
 
         <!-- Signatures -->
         <div class="row">
-            @if (file_exists(public_path('storage/' . $userForm->applicant_signature)))
+            @if (!empty($userForm->applicant_signature) && file_exists(public_path('storage/' . $userForm->applicant_signature)))
                 <div>
-                    <img src="{{ public_path('storage/' . $userForm->applicant_signature) }}" alt="Applicant Signature">
+                    <img src="{{ asset('storage/' . $userForm->applicant_signature) }}" alt="Applicant Signature">
                     <div class="label">Applicant Signature</div>
                 </div>
+            @else
+                <p>Applicant Signature not available</p>
             @endif
-            @if (file_exists(public_path('storage/' . $userForm->guarantor_signature)))
+
+            @if (!empty($userForm->guarantor_signature) && file_exists(public_path('storage/' . $userForm->guarantor_signature)))
                 <div>
-                    <img src="{{ public_path('storage/' . $userForm->guarantor_signature) }}" alt="Guarantor Signature">
+                    <img src="{{ asset('storage/' . $userForm->guarantor_signature) }}" alt="Guarantor Signature">
                     <div class="label">Guarantor Signature</div>
                 </div>
+            @else
+                <p>Guarantor Signature not available</p>
             @endif
         </div>
     </div>
+
 
 </body>
 </html>
