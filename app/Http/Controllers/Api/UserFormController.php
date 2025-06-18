@@ -193,7 +193,7 @@ class UserFormController extends Controller
             'province' => 'nullable|string',
             'postal_code' => 'nullable|string',
             'email' => 'nullable|email|max:255',
-            'applicant_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'applicant_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
             // Professional Data
             'profession' => 'nullable|string|max:255',
             'date_of_payment' => 'nullable|string',
@@ -201,8 +201,8 @@ class UserFormController extends Controller
             'bank_details' => 'nullable|string|max:255',
             'id_type' => 'nullable|string|max:255',
             'loan_purpose' => 'nullable|string|max:255',
-            'idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            'idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
             // Guarantor Data
             'guarantor_first_name' => 'nullable|string|max:255',
             'guarantor_surname' => 'nullable|string|max:255',
@@ -214,9 +214,9 @@ class UserFormController extends Controller
             'guarantor_postal_code' => 'nullable|string|max:255',
             'guarantor_id_type' => 'nullable|string|max:255',
             'guarantor_nationality' => 'nullable|string|max:255',
-            'guarantor_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'guarantor_idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
-            'guarantor_idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:2048',
+            'guarantor_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            'guarantor_idcard_front' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            'guarantor_idcard_back' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
             // Office Use
             'amount' => 'required|string',
             'rate' => 'required|string',
