@@ -192,7 +192,7 @@ class UserFormController extends Controller
             'city' => 'nullable|string',
             'province' => 'nullable|string',
             'postal_code' => 'nullable|string',
-            'email' => 'nullable|email|max:255',
+            'email' => 'nullable|max:255',
             'applicant_signature' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
             // Professional Data
             'profession' => 'nullable|string|max:255',
@@ -274,7 +274,7 @@ class UserFormController extends Controller
             'city' => 'nullable|string',
             'province' => 'nullable|string',
             'postal_code' => 'nullable|string',
-            'email' => 'nullable|email|max:255',
+            'email' => 'nullable|max:255',
             // Professional Data
             'profession' => 'nullable|string|max:255',
             'date_of_payment' => 'nullable|string',

@@ -16,13 +16,13 @@ const CongratsPage = () => {
                 </div>
                 
                 <p className="mt-4 text-lg font-medium">Your form has been successfully submitted.</p>
-                <div className="flex space-x-4">
+                <div className="flex justify-center">
                     <a href="/" className="mt-6 inline-block px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg">
-                        Go Back to Home
+                        Submit a New Response
                     </a>
-                    <a href="/user-data" className="mt-6 inline-block px-6 py-2 bg-green-600 text-white font-semibold rounded-lg">
+                    {/* <a href="/user-data" className="mt-6 inline-block px-6 py-2 bg-green-600 text-white font-semibold rounded-lg">
                         View User Data
-                    </a>
+                    </a> */}
                 </div>
                 
             </div>

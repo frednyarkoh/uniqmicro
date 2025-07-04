@@ -4,6 +4,7 @@ import SideModal from "../components/SideModal";
 import InputField from "../components/InputField";
 import Select from "../components/Select";
 import toast from "react-hot-toast";
+import ImageUpload from "./ImageUpload";
 
 const UserEdit = ({ userData, openModal, setOpenModal, fetchUserData }) => {
     const [countries, setCountries] = useState([]);
@@ -77,6 +78,58 @@ const UserEdit = ({ userData, openModal, setOpenModal, fetchUserData }) => {
         { value: "Others", name: "Others" },
     ];
 
+    const [images, setImages] = useState({
+      idcard_front: null,
+      idcard_back: null,
+      applicant_signature: null,
+      guarantor_idcard_front: null,
+      guarantor_idcard_back: null, // if initial images exist
+    });
+
+    const handleImageChange = (field, file) => {
+      if (file) {
+        const previewUrl = URL.createObjectURL(file);
+        setImages((prev) => ({
+          ...prev,
+          [field]: {
+            file,
+            previewUrl,
+          },
+        }));
+      }
+    };
+
+    useEffect(() => {
+      if (userData) {
+        setFormData({
+          ...userData,
+        });
+
+        // Build initial preview URLs
+        setImages({
+          idcard_front: userData.idcard_front
+            ? `${baseUrl}/storage/${userData.idcard_front}`
+            : null,
+          idcard_back: userData.idcard_back
+            ? `${baseUrl}/storage/${userData.idcard_back}`
+            : null,
+          applicant_signature: userData.applicant_signature
+            ? `${baseUrl}/storage/${userData.applicant_signature}`
+            : null,
+          guarantor_idcard_front: userData.guarantor_idcard_front
+            ? `${baseUrl}/storage/${userData.guarantor_idcard_front}`
+            : null,
+          guarantor_idcard_back: userData.guarantor_idcard_back
+            ? `${baseUrl}/storage/${userData.guarantor_idcard_back}`
+            : null,
+        });
+      }
+    }, [userData]);
+
+
+    const baseUrl = import.meta.env.VITE_API_BASE_URL;
+
+
     useEffect(() => {
         const fetchCountries = async () => {
             try {
@@ -130,21 +183,31 @@ const UserEdit = ({ userData, openModal, setOpenModal, fetchUserData }) => {
       formDataToSend.append(key, value);
     });
 
+    Object.entries(images).forEach(([field, data]) => {
+      if (data?.file instanceof File) {
+        formDataToSend.append(field, data.file);
+      }
+    });
+
     try {
-        const response = await axios.post(`/api/user-data/update/${userData.id}`, formDataToSend, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
+      const response = await axios.post(
+        `/api/user-data/update/${userData.id}`,
+        formDataToSend,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
       toast.success(response.data.message);
       fetchUserData();
       setOpenModal(false);
-
     } catch (error) {
       toast.error(error.response?.data?.message || "Error updating user data.");
     } finally {
       setIsSaving(false);
     }
   };
+
 
   return (
     <SideModal
@@ -158,7 +221,7 @@ const UserEdit = ({ userData, openModal, setOpenModal, fetchUserData }) => {
             <h3 className="text-lg font-semibold">Biodata</h3>
             <InputField label="First Name" name="first_name" value={formData.first_name} onChange={handleChange} />
             <InputField label="Surname" name="surname" value={formData.surname} onChange={handleChange} />
-            <InputField type={`email`} label="Email Address" name="email" value={formData.email} onChange={handleChange} />
+            <InputField type={`text`} label="Email Address" name="email" value={formData.email} onChange={handleChange} />
             <InputField type={`date`} label="Date of birth" name="date_of_birth" value={formData.date_of_birth} onChange={handleChange} />
             <Select label="Gender" name="gender" value={formData.gender} onChange={handleChange} menuItems={genderOptions} />
             <Select label="Nationality" name="nationality" value={formData.nationality} onChange={handleChange} menuItems={countries} />
@@ -169,7 +232,6 @@ const UserEdit = ({ userData, openModal, setOpenModal, fetchUserData }) => {
             <InputField label="City" name="city" value={formData.city} onChange={handleChange} />
             <InputField label="Province" name="province" value={formData.province} onChange={handleChange} />
             <InputField label="Postal Code" name="postal_code" value={formData.postal_code} onChange={handleChange} />
-            <InputField label="Province" name="province" value={formData.province} onChange={handleChange} />
             
             {/* Guarantor Data */}
             <h3 className="text-lg font-semibold">Guarantor Data</h3>
@@ -186,11 +248,61 @@ const UserEdit = ({ userData, openModal, setOpenModal, fetchUserData }) => {
             <InputField label="Number of Month" name="number_of_month" value={formData.number_of_month} onChange={handleChange} />
             <InputField label="Rate" name="rate" value={formData.rate} disabled />
             <InputField label="Total Amount" name="total_amount" value={formData.total_amount} disabled />
+            <h3 className="text-lg font-semibold">User Images</h3>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <ImageUpload
+                label="ID Card Front"
+                initialUrl={
+                  images?.idcard_front?.previewUrl ||
+                  images?.idcard_front ||
+                  "/images/placeholder.png"
+                }
+                onChange={(file) => handleImageChange("idcard_front", file)}
+              />
+              <ImageUpload
+                label="ID Card Back"
+                initialUrl={
+                  images?.idcard_back?.previewUrl ||
+                  images?.idcard_back ||
+                  "/images/placeholder.png"
+                }
+                onChange={(file) => handleImageChange("idcard_back", file)}
+              />
+              
+              <ImageUpload
+                label="Guarantor ID Card Front"
+                initialUrl={
+                  images?.guarantor_idcard_front?.previewUrl ||
+                  images?.guarantor_idcard_front ||
+                  "/images/placeholder.png"
+                }
+                onChange={(file) => handleImageChange("guarantor_idcard_front", file)}
+              />
+              <ImageUpload
+                label="Guarantor ID Card Back"
+                initialUrl={
+                  images?.guarantor_idcard_back?.previewUrl ||
+                  images?.guarantor_idcard_back ||
+                  "/images/placeholder.png"
+                }
+                onChange={(file) => handleImageChange("guarantor_idcard_back", file)}
+              />
+
+              <ImageUpload
+                label="Applicant Signature"
+                initialUrl={
+                  images?.applicant_signature?.previewUrl ||
+                  images?.applicant_signature ||
+                  "/images/placeholder.png"
+                }
+                onChange={(file) => handleImageChange("applicant_signature", file)}
+              />
+            </div>
 
             {/* Submit Button */}
             <button type="submit" className="w-full bg-blue-600 text-white p-3 rounded-sm hover:bg-blue-700 transition">
             {isSaving ? (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center justify-center gap-2">
                     <div className="spinner-border animate-spin inline-block w-4 h-4 border-2 rounded-full"></div>
                     <span>Saving...</span>
                 </div>
